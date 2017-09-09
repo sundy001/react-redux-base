@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get } from 'lodash';
 
 export function createAddExpectation<T extends app.store.Entity>(
     store: app.store.ReadonlyStore<T>,
@@ -11,84 +11,102 @@ export function createAddExpectation<T extends app.store.Entity>(
     return expectation;
 }
 
-export function storeShouldBeImmutable<T, U>(
-    this: {store: app.store.ReadonlyStore<U>},
-    reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-    action: T
-): void {
-    it('should return new state', () => {
-        const result = reducer(this.store, action);
+export const storeShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+    return <T>(
+        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
+        action: T
+    ): void => {
+        it('should return new state', () => {
+            const result = reducer(self.store, action);
 
-        expect(result).not.toBe(this.store);
-    });
+            expect(result).not.toBe(self.store);
+        });
 
-    it('should return different object of byId', () => {
-        const result = reducer(this.store, action);
+        it('should return different object of byId', () => {
+            const result = reducer(self.store, action);
 
-        expect(result.byId).not.toBe(this.store.byId);
-    });
+            expect(result.byId).not.toBe(self.store.byId);
+        });
 
-    it('should return different object of allIds', () => {
-        const result = reducer(this.store, action);
+        it('should return different object of allIds', () => {
+            const result = reducer(self.store, action);
 
-        expect(result.allIds).not.toBe(this.store.allIds);
-    });
+            expect(result.allIds).not.toBe(self.store.allIds);
+        });
+    }
 }
 
-export function storeByIdShouldBeImmutable<T, U>(
-    this: {store: app.store.ReadonlyStore<U>},
-    reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-    action: T
-): void {
-    it('should return new state', () => {
-        const result = reducer(this.store, action);
+export const storeByIdShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+    return <T>(
+        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
+        action: T
+    ): void => {
+        it('should return new state', () => {
+            const result = reducer(self.store, action);
 
-        expect(result).not.toBe(this.store);
-    });
+            expect(result).not.toBe(self.store);
+        });
 
-    it('should return different object of byId', () => {
-        const result = reducer(this.store, action);
+        it('should return different object of byId', () => {
+            const result = reducer(self.store, action);
 
-        expect(result.byId).not.toBe(this.store.byId);
-    });
+            expect(result.byId).not.toBe(self.store.byId);
+        });
+    }
 }
 
-export function storeAllIdsShouldBeImmutable<T, U>(
-    this: {store: app.store.ReadonlyStore<U>},
-    reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-    action: T
-): void {
-    it('should return new state', () => {
-        const result = reducer(this.store, action);
+export const storeAllIdsShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+    return <T>(
+        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
+        action: T
+    ): void => {
+        it('should return new state', () => {
+            const result = reducer(self.store, action);
 
-        expect(result).not.toBe(this.store);
-    });
+            expect(result).not.toBe(self.store);
+        });
 
-    it('should return different object of allIds', () => {
-        const result = reducer(this.store, action);
+        it('should return different object of allIds', () => {
+            const result = reducer(self.store, action);
 
-        expect(result.allIds).not.toBe(this.store.allIds);
-    });
+            expect(result.allIds).not.toBe(self.store.allIds);
+        });
+    }
 }
 
-export function entityNotFoundShouldThrowError<T, U>(
-    this: {store: app.store.ReadonlyStore<U>},
-    reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-    action: T
-): void {
-    it('should throw error when id is not exist in byId', () => {
-        const reducerWrapper = () => {
-            reducer(this.store, action);
-        };
+export const propertyShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+    return <T>(
+        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
+        action: T,
+        path: string,
+    ): void  => {
+        it(`should return different object of entity.${path}`, () => {
+            const result = reducer(self.store, action);
 
-        expect(reducerWrapper).toThrowError(/is not found in/);
-    });
+            expect(get(result.byId, path)).not.toBe(get(self.store.byId, path));
+        });
+    }
+}
 
-    it('should throw error when id is not exist in allIds', () => {
-        const reducerWrapper = () => {
-            reducer(this.store, action);
-        };
+export const entityNotFoundShouldThrowError = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+    return <T>(
+        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
+        action: T
+    ): void => {
+        it('should throw error when id is not exist in byId', () => {
+            const reducerWrapper = () => {
+                reducer(self.store, action);
+            };
 
-        expect(reducerWrapper).toThrowError(/is not found in/);
-    });
+            expect(reducerWrapper).toThrowError(/is not found in/);
+        });
+
+        it('should throw error when id is not exist in allIds', () => {
+            const reducerWrapper = () => {
+                reducer(self.store, action);
+            };
+
+            expect(reducerWrapper).toThrowError(/is not found in/);
+        });
+    }
 }

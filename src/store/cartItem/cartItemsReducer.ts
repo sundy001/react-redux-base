@@ -7,80 +7,134 @@ import {
     UpdateCartItemQuantityAction,
     UpdateCartItemOptionsAction,
     RemoveCartItemAction,
-    updateCartItemQuantity as updateCartItemQuantityAction,
-    removeCartItem as removeCartItemAction,
 } from './cartItemsActions';
 import { assertEntityExist, assertEntitiesExist } from 'services/assets';
-import { findIdentityItem } from 'services/cart';
+import { findIdentityItem, isSameOptions } from 'services/cart';
 import { combineReducers } from 'redux';
-import cartReducer from './cartItemReducer';
+import createCartItem from './cartItemFactory';
 
 const removeCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
-    action: RemoveCartItemAction,
-): app.store.ReadonlyStore<app.entity.CartItem> => {
-    assertEntityExist('cartItems', state, action.id);
+    id: string,
+) => {
+    assertEntityExist('cartItems', state, id);
 
     const byId: app.store.IdStore<app.entity.CartItem> = {...state.byId};
-    delete byId[action.id];
+    delete byId[id];
 
     return {
         byId,
-        allIds: state.allIds.filter(id => id !== action.id),
+        allIds: state.allIds.filter(theId => theId !== id),
     };
-}
+};
 
-const updateCartItemQuantity = (
+const updateCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
-    action: UpdateCartItemQuantityAction,
-): app.store.ReadonlyStore<app.entity.CartItem> => {
+    id: string,
+    quantity: number,
+    options?: ReadonlyArray<app.store.GenericId>
+) => {
+    assertEntityExist('cartItems', state, id);
 
-    assertEntityExist('cartItems', state, action.id);
-    const item = state.byId[action.id];
+    const item = state.byId[id];
+    const isOptionsNoUpdate = (options === undefined || isSameOptions(item.options, options));
 
-    if (action.quantity === item.quantity) {
+    if (quantity === item.quantity && isOptionsNoUpdate) {
         return state;
-    } else if (action.quantity < 0) {
-        return removeCartItem(state, removeCartItemAction(action.id));
+    } else if (quantity < 0) {
+        return removeCartItem(state, id);
     } else {
+        const updatedItem = {
+            ...state.byId[id],
+            quantity,
+        };
+
+        if (options !== undefined) {
+            updatedItem.options = options
+        }
+
         return {
             byId: {
                 ...state.byId,
-                [action.id]: cartReducer(state.byId[action.id], action)
+                [id]: updatedItem,
             },
             allIds: state.allIds
         };
     }
 };
 
+const addCartItem = (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    id: string,
+    item: string,
+    owner: string,
+    quantity: number,
+    options: ReadonlyArray<app.store.GenericId>,
+) => {
+    const existingItemId = findIdentityItem(options, item, owner, state.byId);
+
+    if (existingItemId === undefined) {
+        return {
+            byId: {
+                ...state.byId,
+                [id]: createCartItem(id, item, owner, quantity, options)
+            },
+            allIds: [ ...state.allIds, id ]
+        };
+    } else {
+        return updateCartItem(state, existingItemId, state.byId[existingItemId].quantity + quantity);
+    }
+}
+
+const addCartItemByAction = (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    action: AddCartItemAction,
+) => {
+    return addCartItem(state, action.id, action.item, action.owner, action.quantity, action.options);
+};
+
+const updateCartItemQuantityByAction = (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    action: UpdateCartItemQuantityAction,
+) => {
+    return updateCartItem(state, action.id, action.quantity);
+};
+
+const updateCartItemOptionsByAction = (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    action: UpdateCartItemOptionsAction,
+) => {
+    assertEntityExist('cartItems', state, action.id);
+
+    const targetCartItem = state.byId[action.id];
+    const originalOwner = targetCartItem.owner;
+
+    let resultState = state;
+    Object.keys(action.quantityMap).forEach(owner => {
+        const quantity = action.quantityMap[owner];
+
+        resultState = owner === originalOwner
+            ? updateCartItem(resultState, action.id, quantity, action.options)
+            : addCartItem(resultState, 'abc', targetCartItem.item, owner, quantity, action.options);
+    });
+
+    return resultState;
+};
+
+const removeCartItemByAction = (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    action: RemoveCartItemAction,
+) => {
+    return removeCartItem(state, action.id);
+};
+
 export default (state: app.store.ReadonlyStore<app.entity.CartItem>, action: Action): app.store.ReadonlyStore<app.entity.CartItem> => {
     switch(action.type) {
-        case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantity(state, action);
-        case ADD_CART_ITEM:
-            const existingItemId = findIdentityItem(action.options, action.item, action.owner, state.byId);
-
-            let allIds: ReadonlyArray<string>;
-            let resultAction: AddCartItemAction | UpdateCartItemQuantityAction | UpdateCartItemOptionsAction;
-
-             if (existingItemId === undefined) {
-                resultAction = action;
-                allIds = [ ...state.allIds, resultAction.id ];
-             } else {
-                resultAction = updateCartItemQuantityAction(existingItemId, state.byId[existingItemId].quantity + action.quantity);
-                allIds = state.allIds;
-             }
-        case UPDATE_CART_ITEM_OPTIONS:
-
-            return {
-                byId: {
-                    ...state.byId,
-                    [resultAction.id]: cartReducer(state.byId[resultAction.id], resultAction)
-                },
-                allIds
-            };
-        case REMOVE_CART_ITEM: return removeCartItem(state, action);
-        default:
-            return state;
+        case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantityByAction(state, action);
+        case ADD_CART_ITEM: return addCartItemByAction(state, action);
+        case UPDATE_CART_ITEM_OPTIONS: return updateCartItemOptionsByAction(state, action);
+        case REMOVE_CART_ITEM: return removeCartItemByAction(state, action);
+        default: return state;
     }
 };
 

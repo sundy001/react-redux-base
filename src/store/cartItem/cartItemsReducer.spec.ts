@@ -1,12 +1,13 @@
 import 'jest';
 import { cloneDeep } from 'lodash';
-import { ADD_CART_ITEM, addCartItem, updateCartItemQuantity, removeCartItem  } from './cartItemsActions';
+import { ADD_CART_ITEM, addCartItem, updateCartItemQuantity, updateCartItemOptions, removeCartItem  } from './cartItemsActions';
 import cartItems from './cartItemsReducer';
 import {
     createAddExpectation,
     entityNotFoundShouldThrowError,
     storeShouldBeImmutable,
     storeByIdShouldBeImmutable,
+    propertyShouldBeImmutable,
     createRandomCartItem,
 } from 'services/test';
 
@@ -14,21 +15,21 @@ describe('cartsReducer', function(this: TestEnv) {
     beforeEach(() => {
         this.store = {
             byId:{
-                cartItem1: { id: 'cartItem1', item: 'item1', owner: 'owner2', quantity: 3, options: [] },
+                cartItem1: {id: 'cartItem1', item: 'item1', owner: 'owner2', quantity: 3, options: []},
                 cartItem2: {
                     id: 'cartItem2',
                     item: 'item2',
                     owner: 'owner2',
                     quantity: 5,
                     options: [
-                        { type: 'topping', id: 'topping1' },
-                        { type: 'topping', id: 'topping2' },
-                        { type: 'topping', id: 'topping3' },
+                        {type: 'topping', id: 'topping1'},
+                        {type: 'topping', id: 'topping2'},
+                        {type: 'topping', id: 'topping3'},
                     ]
                 },
-                cartItem3: { id: 'cartItem3', item: 'item3', owner: 'owner3', quantity: 7, options: [] },
+                cartItem3: {id: 'cartItem3', item: 'item3', owner: 'owner3', quantity: 7, options: []},
             },
-            allIds:[ 'cartItem1', 'cartItem2', 'cartItem3' ]
+            allIds:['cartItem1', 'cartItem2', 'cartItem3']
         };
     });
 
@@ -63,7 +64,7 @@ describe('cartsReducer', function(this: TestEnv) {
         });
 
         it('should sum item quantity when item has same itemId, ownerId and options', () => {
-            const expectation = cloneDeep(this.store) as app.store.Store<app.entity.CartItem>;
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
             expectation.byId.cartItem1.quantity += 5;
 
             const result = cartItems(this.store, {
@@ -79,7 +80,7 @@ describe('cartsReducer', function(this: TestEnv) {
         });
 
         it('should sum item quantity when item has same itemId, ownerId and options, even if options order is different', () => {
-            const expectation = cloneDeep(this.store) as app.store.Store<app.entity.CartItem>;
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
             expectation.byId.cartItem2.quantity += 2;
 
             const result = cartItems(this.store, {
@@ -134,15 +135,16 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        storeShouldBeImmutable.bind(this)(cartItems, addCartItem('cartItem9', 'item2', 'owner2', 3, []));
+        storeShouldBeImmutable(this)(cartItems, addCartItem('cartItem9', 'item2', 'owner2', 3, []));
     });
 
     describe('#updateCartItemQuantity', () => {
         it('should update item quantity', () => {
-            const QUANTITY = 8;
-            const expectation = cloneDeep(this.store) as app.store.Store<app.entity.CartItem>;
-            expectation.byId.cartItem2.quantity = QUANTITY;
-            const action = updateCartItemQuantity('cartItem2', QUANTITY);
+            const TEST_QUANTITY = 8;
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            expectation.byId.cartItem2.quantity = TEST_QUANTITY;
+            const action = updateCartItemQuantity('cartItem2', TEST_QUANTITY);
 
             const result = cartItems(this.store, action);
 
@@ -170,8 +172,32 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        storeByIdShouldBeImmutable.bind(this)(cartItems, updateCartItemQuantity('cartItem1', 9));
-        entityNotFoundShouldThrowError.bind(this)(cartItems, updateCartItemQuantity('cartItem10', 9));
+        storeByIdShouldBeImmutable(this)(cartItems, updateCartItemQuantity('cartItem1', 9));
+        entityNotFoundShouldThrowError(this)(cartItems, updateCartItemQuantity('cartItem10', 9));
+    });
+
+    describe('#updateCartItemOptions', () => {
+        it('should update item options and quantity', () => {
+            const TEST_QUANTITY = 6;
+            const TEST_CART_ITEM_ID = 'cartItem1';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            const cartItem = expectation.byId[TEST_CART_ITEM_ID];
+            cartItem.options = [{type: 'topping', id: 'topping1'}];
+            cartItem.quantity = TEST_QUANTITY;
+            const action = updateCartItemOptions(TEST_CART_ITEM_ID, cartItem.options, {
+                [cartItem.owner]: TEST_QUANTITY
+            });
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        const action = updateCartItemOptions('cartItem1', [], { 'owner2': 1 });
+        storeByIdShouldBeImmutable(this)(cartItems, action);
+        // propertyShouldBeImmutable(this)(cartItems, action, '[0].options');
+        // entityNotFoundShouldThrowError(this)(cartItems, removeCartItem('cartItem10'));
     });
 
     describe('#removeCartItem', () => {
@@ -187,10 +213,17 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        storeShouldBeImmutable.bind(this)(cartItems, removeCartItem('cartItem1'));
-        entityNotFoundShouldThrowError.bind(this)(cartItems, removeCartItem('cartItem10'));
+        storeShouldBeImmutable(this)(cartItems, removeCartItem('cartItem1'));
+        entityNotFoundShouldThrowError(this)(cartItems, removeCartItem('cartItem10'));
     });
 });
+
+interface CartItem extends app.store.Entity {
+    item: string;
+    owner: string;
+    quantity: number;
+    options: ReadonlyArray<app.store.GenericId>;
+}
 
 type TestEnv = {
     store: app.store.ReadonlyStore<app.entity.CartItem>

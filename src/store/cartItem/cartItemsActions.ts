@@ -29,13 +29,13 @@ export const updateCartItemQuantity = (
 
 export const updateCartItemOptions = (
     id: string,
-    quantity: number,
     options:ReadonlyArray<app.store.GenericId>,
+    quantityMap: OwnerQuantityMap,
 ): UpdateCartItemOptionsAction => ({
     type: UPDATE_CART_ITEM_OPTIONS,
     id,
-    quantity,
     options,
+    quantityMap,
 });
 
 export const removeCartItem = (
@@ -55,7 +55,7 @@ export interface AddCartItemAction {
 }
 
 export interface UpdateCartItemQuantityAction {
-    readonly type: 'UPDATE_CART_ITEM_QUANTITY' | 'ADD_CART_ITEM_QUANTITY';
+    readonly type: 'UPDATE_CART_ITEM_QUANTITY';
     readonly id: string;
     readonly quantity: number;
 }
@@ -63,11 +63,13 @@ export interface UpdateCartItemQuantityAction {
 export interface UpdateCartItemOptionsAction {
     readonly type: 'UPDATE_CART_ITEM_OPTIONS';
     readonly id: string;
-    readonly quantity: number;
     readonly options:ReadonlyArray<app.store.GenericId>;
+    readonly quantityMap: OwnerQuantityMap;
 }
 
 export interface RemoveCartItemAction {
     readonly type: 'REMOVE_CART_ITEM';
     readonly id: string;
 }
+
+type OwnerQuantityMap = { [owenerId: string]: number };
