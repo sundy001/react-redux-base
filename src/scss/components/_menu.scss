@@ -1,0 +1,40 @@
+@mixin link-state-normal {
+    line-height: 1;
+    text-transform: capitalize;
+    color: inherit;
+    border-bottom: 2px solid transparent;
+    padding-bottom: (0.7rem - rem-calc(2));
+}
+
+@mixin link-state-hover {
+    text-shadow: 1px 0 0 black;
+    color: #000;
+}
+
+@mixin link-state-active {
+    text-shadow: 1px 0 0 black;
+    color: #000;
+    border-bottom-color: get-color(primary);
+}
+
+@mixin app-submenu($namespace: $default-namespace) {
+    $menu-item-color-active: #333;
+    $menu-item-background-hover: transparent;
+    $menu-item-background-active: transparent;
+
+    .#{$namespace}-submenu {
+        @include menu-base;
+
+        &__link {
+            @include link-state-normal;
+
+            &:hover {
+                @include link-state-hover;
+            }
+
+            &.is-active {
+                @include link-state-active;
+            }
+        }
+    }
+}

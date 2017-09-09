@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "jsx": "react",
+        "lib": ["dom", "es6", "dom.iterable"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "types": ["reflect-metadata"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "noImplicitAny": true,
+        "removeComments": false,
+        "allowJs": true,
+        "sourceMap": true,
+        "baseUrl": "src",
+        "paths": {
+            "components": ["components/*"],
+            "scenes": ["scenes/*"],
+            "services": ["services/*"]
+        }
+    },
+    "compileOnSave": false,
+    "exclude": [
+        "node_modules"
+    ]
+}
