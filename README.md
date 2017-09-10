@@ -29,6 +29,18 @@ I find that using global namesapce properly can reduce a lot of boilerplant code
 
 Almsot all object is declare as `readonly` to enforce immutable. I think using immutable.js is a bit outdated. It takes time to learn and also create unnecessary noise within the code. So I prefer to drop it and let typescript to enfore everything is immutable.
 
+## Dependency Injection
+I continuously looking for good DI library. DI always is a missing piece of Javascript. Usually frontend developer have three approaches to solve this.
+
+1. Omit it. Put everything inside single module, try to avoid split logic and create web-like dependency.
+2. Make class injectable without DI. Another kind of disaster, a lot of unnecessary object pass throught constructor.
+3. Using full stack framework, which already provided DIC
+
+Inversify is the solution.
+
+## RxJS
+Once you know it, you will love it. Compare with generator it can do more and do it in a beautiful way.
+
 ## Redux
 Nothing special. I follow online common partice to normalize the store like:
 ```javascript
@@ -40,6 +52,9 @@ Nothing special. I follow online common partice to normalize the store like:
     allIds: ['key1', 'key2']
 }
 ```
+I'd like to introduce `redux-observable` for async handling. RxJS is so good, it is so descriptive and expressive. This is the thing I think will change the JS world after JQuery. But the downside is the learning curve may be a bit high. Compare with react-saga, RxJS is more easy to understand due to is desciptive style coding.
+
+reselect will be added as Selector for guling between container component and the store. It make that piece of logic reusable and also gain extra performance boost.
 
 ## Config Setup Reference
 Setup tools are tedious. This project is a good starting point to setup full-stack Typescript environment.
