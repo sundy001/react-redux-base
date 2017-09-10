@@ -12,7 +12,6 @@ import {
 } from './cartItemsActions';
 import { assertEntityExist, assertEntitiesExist } from 'services/assets';
 import { findIdentityItem, isSameOptions } from 'services/cart';
-import { combineReducers } from 'redux';
 import createCartItem from './cartItemFactory';
 
 const idGenerator = container.get<app.services.IdGeneratorInterface>(TYPES.IdGenerator);
