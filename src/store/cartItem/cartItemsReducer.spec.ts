@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import 'jest';
 import { cloneDeep } from 'lodash';
 import { ADD_CART_ITEM, addCartItem, updateCartItemQuantity, updateCartItemOptions, removeCartItem  } from './cartItemsActions';
@@ -28,8 +29,10 @@ describe('cartsReducer', function(this: TestEnv) {
                     ]
                 },
                 cartItem3: {id: 'cartItem3', item: 'item3', owner: 'owner3', quantity: 7, options: []},
+                cartItem4: {id: 'cartItem4', item: 'item2', owner: 'owner2', quantity: 2, options: []},
+                cartItem5: {id: 'cartItem5', item: 'item3', owner: 'owner4', quantity: 2, options: []},
             },
-            allIds:['cartItem1', 'cartItem2', 'cartItem3']
+            allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5']
         };
     });
 
@@ -135,7 +138,7 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        storeShouldBeImmutable(this)(cartItems, addCartItem('cartItem9', 'item2', 'owner2', 3, []));
+        storeShouldBeImmutable(this)(cartItems, addCartItem('cartItem9', 'item2', 'owner8', 3, []));
     });
 
     describe('#updateCartItemQuantity', () => {
@@ -177,7 +180,7 @@ describe('cartsReducer', function(this: TestEnv) {
     });
 
     describe('#updateCartItemOptions', () => {
-        it('should update item options and quantity', () => {
+        it('should update item options and quantity when the item belongs to the item owner', () => {
             const TEST_QUANTITY = 6;
             const TEST_CART_ITEM_ID = 'cartItem1';
 
@@ -194,10 +197,71 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
+        it('should merge to exist item when the item owner has same item', () => {
+            const TEST_QUANTITY = 6;
+            const TEST_CART_ITEM_ID = 'cartItem4';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            expectation.byId.cartItem2.quantity += TEST_QUANTITY;
+            delete expectation.byId[TEST_CART_ITEM_ID];
+            expectation.allIds = expectation.allIds.filter(id => id !== TEST_CART_ITEM_ID);
+
+            const action = updateCartItemOptions(
+                TEST_CART_ITEM_ID,
+                [
+                    {type: 'topping', id: 'topping1'},
+                    {type: 'topping', id: 'topping2'},
+                    {type: 'topping', id: 'topping3'},
+                ],
+                {
+                    [this.store.byId[TEST_CART_ITEM_ID].owner]: TEST_QUANTITY,
+                },
+            );
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        it('should add new item when the item is assigned to other user', () => {
+            const TEST_QUANTITY = 6;
+            const TEST_OWNER = 'owner9';
+            const TEST_CART_ITEM_ID = 'cartItem4';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            const item = createRandomCartItem('abc', this.store.byId[TEST_CART_ITEM_ID].item, TEST_OWNER, TEST_QUANTITY, []);
+            expectation.byId.abc = item;
+            expectation.allIds.push('abc');
+            const action = updateCartItemOptions(TEST_CART_ITEM_ID, [], {[TEST_OWNER]: TEST_QUANTITY});
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        it('should return ideintity item object when quantity and options are same', () => {
+            const TEST_CART_ITEM_ID1 = 'cartItem3';
+            const TEST_CART_ITEM_ID2 = 'cartItem5';
+            const item1 = this.store.byId[TEST_CART_ITEM_ID1];
+            const item2 = this.store.byId[TEST_CART_ITEM_ID2];
+
+            const action = updateCartItemOptions(
+                TEST_CART_ITEM_ID1,
+                item1.options,
+                {
+                    [item1.owner]: item1.quantity,
+                    [item2.owner]: 0,
+                },
+            );
+
+            const result = cartItems(this.store, action);
+            expect(result).toBe(this.store);
+        });
+
         const action = updateCartItemOptions('cartItem1', [], { 'owner2': 1 });
         storeByIdShouldBeImmutable(this)(cartItems, action);
         // propertyShouldBeImmutable(this)(cartItems, action, '[0].options');
-        // entityNotFoundShouldThrowError(this)(cartItems, removeCartItem('cartItem10'));
+        entityNotFoundShouldThrowError(this)(cartItems, updateCartItemOptions('cartItem10', [], { 'owner2': 1 }));
     });
 
     describe('#removeCartItem', () => {

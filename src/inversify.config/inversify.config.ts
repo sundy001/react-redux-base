@@ -1,8 +1,8 @@
 import { Container } from "inversify";
 import TYPES from "../TYPES";
-import { IdGenerator, IdGeneratorInterface} from 'services/IdGenerator';
+import IdGenerator from 'services/IdGenerator';
 
 var container = new Container();
-container.bind<IdGeneratorInterface>(TYPES.IdGenerator).to(IdGenerator);
+container.bind<app.services.IdGeneratorInterface>(TYPES.IdGenerator).to(IdGenerator);
 
 export default container;
