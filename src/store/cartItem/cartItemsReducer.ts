@@ -67,12 +67,12 @@ const updateCartItem = (
 
     if (quantity === cartItem.quantity && isOptionsNoUpdate) {
         return state;
-    } else if (quantity < 0) {
+    } else if (quantity <= 0) {
         return removeCartItem(state, id);
     } else if (options !== undefined) {
         const existingItemId = findIdentityItem(options, cartItem.item, cartItem.owner, state.byId);
 
-        if (existingItemId === undefined) {
+        if (existingItemId === undefined || existingItemId === id) {
             return updateCartItemQuantityAndOptions(state, id, quantity, options);
         } else {
             const tempState = removeCartItem(state, id);
@@ -90,6 +90,10 @@ const addCartItem = (
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
+    if (quantity <= 0) {
+        return state;
+    }
+
     const existingItemId = findIdentityItem(options, item, owner, state.byId);
     const id = generateEntityId('cartItem', state.idCounter);
 
@@ -151,8 +155,8 @@ const removeCartItemByAction = (
 
 export default (state: app.store.ReadonlyStore<app.entity.CartItem>, action: Action): app.store.ReadonlyStore<app.entity.CartItem> => {
     switch(action.type) {
-        case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantityByAction(state, action);
         case ADD_CART_ITEM: return addCartItemByAction(state, action);
+        case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantityByAction(state, action);
         case UPDATE_CART_ITEM_OPTIONS: return updateCartItemOptionsByAction(state, action);
         case REMOVE_CART_ITEM: return removeCartItemByAction(state, action);
         default: return state;

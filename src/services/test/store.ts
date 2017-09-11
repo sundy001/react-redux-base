@@ -34,7 +34,7 @@ export const storeShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<
             expect(result.allIds).not.toBe(self.store.allIds);
         });
     }
-}
+};
 
 export const storeByIdShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
@@ -53,7 +53,7 @@ export const storeByIdShouldBeImmutable = <U>(self: {store: app.store.ReadonlySt
             expect(result.byId).not.toBe(self.store.byId);
         });
     }
-}
+};
 
 export const storeAllIdsShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
@@ -72,7 +72,7 @@ export const storeAllIdsShouldBeImmutable = <U>(self: {store: app.store.Readonly
             expect(result.allIds).not.toBe(self.store.allIds);
         });
     }
-}
+};
 
 export const propertyShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
@@ -86,7 +86,7 @@ export const propertyShouldBeImmutable = <U>(self: {store: app.store.ReadonlySto
             expect(get(result.byId, path)).not.toBe(get(self.store.byId, path));
         });
     }
-}
+};
 
 export const entityNotFoundShouldThrowError = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
@@ -109,4 +109,4 @@ export const entityNotFoundShouldThrowError = <U>(self: {store: app.store.Readon
             expect(reducerWrapper).toThrowError(/is not found in/);
         });
     }
-}
+};
