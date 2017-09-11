@@ -8,6 +8,7 @@ declare namespace app {
         type Store<T extends Entity> =  {
             byId: IdStore<T>;
             allIds: string[];
+            idCounter: number;
         }
 
         type ReadonlyIdStore<T> = {
@@ -17,6 +18,7 @@ declare namespace app {
         type ReadonlyStore<T> =  {
             readonly byId: ReadonlyIdStore<T>;
             readonly allIds: ReadonlyArray<string>;
+            readonly idCounter: number;
         }
 
         interface Entity {

@@ -4,14 +4,12 @@ export const UPDATE_CART_ITEM_OPTIONS = 'UPDATE_CART_ITEM_OPTIONS';
 export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
 
 export const addCartItem = (
-    id: string,
     item: string,
     owner: string,
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): AddCartItemAction => ({
     type: ADD_CART_ITEM,
-    id,
     item,
     owner,
     quantity,
@@ -47,7 +45,6 @@ export const removeCartItem = (
 
 export interface AddCartItemAction {
     readonly type: 'ADD_CART_ITEM';
-    readonly id: string;
     readonly item: string;
     readonly owner: string;
     readonly quantity: number;

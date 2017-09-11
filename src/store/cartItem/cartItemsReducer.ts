@@ -1,5 +1,3 @@
-import TYPES from 'TYPES';
-import container from 'inversify.config';
 import {
     ADD_CART_ITEM,
     UPDATE_CART_ITEM_QUANTITY,
@@ -12,9 +10,8 @@ import {
 } from './cartItemsActions';
 import { assertEntityExist, assertEntitiesExist } from 'services/assets';
 import { findIdentityItem, isSameOptions } from 'services/cart';
+import { generateEntityId } from 'services/storeUtil';
 import createCartItem from './cartItemFactory';
-
-const idGenerator = container.get<app.services.IdGeneratorInterface>(TYPES.IdGenerator);
 
 const removeCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
@@ -28,6 +25,7 @@ const removeCartItem = (
     return {
         byId,
         allIds: state.allIds.filter(theId => theId !== id),
+        idCounter: state.idCounter,
     };
 };
 
@@ -51,7 +49,8 @@ const updateCartItemQuantityAndOptions = (
             ...state.byId,
             [id]: item,
         },
-        allIds: state.allIds
+        allIds: state.allIds,
+        idCounter: state.idCounter,
     };
 }
 
@@ -86,13 +85,13 @@ const updateCartItem = (
 
 const addCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
-    id: string,
     item: string,
     owner: string,
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
     const existingItemId = findIdentityItem(options, item, owner, state.byId);
+    const id = generateEntityId('cartItem', state.idCounter);
 
     if (existingItemId === undefined) {
         return {
@@ -100,7 +99,8 @@ const addCartItem = (
                 ...state.byId,
                 [id]: createCartItem(id, item, owner, quantity, options)
             },
-            allIds: [ ...state.allIds, id ]
+            allIds: [ ...state.allIds, id ],
+            idCounter: state.idCounter + 1,
         };
     } else {
         return updateCartItem(state, existingItemId, state.byId[existingItemId].quantity + quantity);
@@ -111,7 +111,7 @@ const addCartItemByAction = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     action: AddCartItemAction,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
-    return addCartItem(state, action.id, action.item, action.owner, action.quantity, action.options);
+    return addCartItem(state, action.item, action.owner, action.quantity, action.options);
 };
 
 const updateCartItemQuantityByAction = (
@@ -136,7 +136,7 @@ const updateCartItemOptionsByAction = (
 
         resultState = owner === originalOwner
             ? updateCartItem(resultState, action.id, quantity, action.options)
-            : addCartItem(resultState, idGenerator.generate('cartItem'), targetCartItem.item, owner, quantity, action.options);
+            : addCartItem(resultState, targetCartItem.item, owner, quantity, action.options);
     });
 
     return resultState;

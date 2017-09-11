@@ -3,7 +3,7 @@ import { cloneDeep, get } from 'lodash';
 export function createAddExpectation<T extends app.store.Entity>(
     store: app.store.ReadonlyStore<T>,
     newEntity: T
-): app.store.ReadonlyStore<T> {
+): app.store.Store<T> {
     const expectation = cloneDeep(store) as app.store.Store<T>;
     expectation.byId[newEntity.id] = newEntity;
     expectation.allIds.push(newEntity.id);

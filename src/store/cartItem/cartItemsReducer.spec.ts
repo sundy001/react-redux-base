@@ -1,7 +1,14 @@
 import "reflect-metadata";
 import 'jest';
 import { cloneDeep } from 'lodash';
-import { ADD_CART_ITEM, addCartItem, updateCartItemQuantity, updateCartItemOptions, removeCartItem  } from './cartItemsActions';
+import {
+    ADD_CART_ITEM,
+    addCartItem,
+    updateCartItemQuantity,
+    updateCartItemOptions,
+    removeCartItem,
+    AddCartItemAction,
+} from './cartItemsActions';
 import cartItems from './cartItemsReducer';
 import {
     createAddExpectation,
@@ -11,9 +18,26 @@ import {
     propertyShouldBeImmutable,
     createRandomCartItem,
 } from 'services/test';
+import { generateEntityId } from 'services/storeUtil';
 
 describe('cartsReducer', function(this: TestEnv) {
+    const createAddCartItemActionByEntity = (cartItem: app.entity.CartItem): AddCartItemAction => {
+        return {
+            type: ADD_CART_ITEM,
+            item: cartItem.item,
+            owner: cartItem.owner,
+            quantity: cartItem.quantity,
+            options: cartItem.options,
+        };
+    };
+
+    const generateCartItemId = (id: number): string => {
+        return generateEntityId('cartItem', id);
+    };
+
     beforeEach(() => {
+        this.NEXT_ID = 9;
+
         this.store = {
             byId:{
                 cartItem1: {id: 'cartItem1', item: 'item1', owner: 'owner2', quantity: 3, options: []},
@@ -32,36 +56,34 @@ describe('cartsReducer', function(this: TestEnv) {
                 cartItem4: {id: 'cartItem4', item: 'item2', owner: 'owner2', quantity: 2, options: []},
                 cartItem5: {id: 'cartItem5', item: 'item3', owner: 'owner4', quantity: 2, options: []},
             },
-            allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5']
+            allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5'],
+            idCounter: this.NEXT_ID,
         };
     });
 
     describe('#AddCartItemAction', () => {
         it('should add item when the store is empty', () => {
-            const newItem: app.entity.CartItem = createRandomCartItem('cartItem9', 'item9');
-            const initState: app.store.ReadonlyStore<app.entity.CartItem> = { byId:{}, allIds:[] };
+            const NEXT_ID = 9;
+            const newItem = createRandomCartItem(generateCartItemId(NEXT_ID), 'item9');
+            const initState: app.store.ReadonlyStore<app.entity.CartItem> = { byId:{}, allIds:[], idCounter: NEXT_ID };
 
-            const result = cartItems(initState, {
-                ...newItem,
-                type: ADD_CART_ITEM,
-            });
+            const result = cartItems(initState, createAddCartItemActionByEntity(newItem));
 
             expect(result).toEqual({
                 byId: {
                     [newItem.id]: newItem,
                 },
-                allIds: [ newItem.id ]
+                allIds: [ newItem.id ],
+                idCounter: NEXT_ID + 1,
             });
         });
 
         it('should append new item at tail when new item added', () => {
-            const newItem: app.entity.CartItem = createRandomCartItem('cartItem9', 'item9');
+            const newItem: app.entity.CartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item9');
             const expectation = createAddExpectation(this.store, newItem);
+            expectation.idCounter++;
 
-            const result = cartItems(this.store, {
-                type: ADD_CART_ITEM,
-                ...newItem,
-            });
+            const result = cartItems(this.store, createAddCartItemActionByEntity(newItem));
 
             expect(result).toEqual(expectation);
         });
@@ -70,14 +92,12 @@ describe('cartsReducer', function(this: TestEnv) {
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
             expectation.byId.cartItem1.quantity += 5;
 
-            const result = cartItems(this.store, {
-                type: ADD_CART_ITEM,
-                id: 'cartItem9',
-                item: this.store.byId.cartItem1.item,
-                owner: this.store.byId.cartItem1.owner,
-                quantity: 5,
-                options: this.store.byId.cartItem1.options,
-            });
+            const result = cartItems(this.store, addCartItem(
+                this.store.byId.cartItem1.item,
+                this.store.byId.cartItem1.owner,
+                5,
+                this.store.byId.cartItem1.options,
+            ));
 
             expect(result).toEqual(expectation);
         });
@@ -86,37 +106,34 @@ describe('cartsReducer', function(this: TestEnv) {
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
             expectation.byId.cartItem2.quantity += 2;
 
-            const result = cartItems(this.store, {
-                type: ADD_CART_ITEM,
-                id: 'cartItem9',
-                item: this.store.byId.cartItem2.item,
-                owner: this.store.byId.cartItem2.owner,
-                quantity: 2,
-                options: [
+            const result = cartItems(this.store, addCartItem(
+                this.store.byId.cartItem2.item,
+                this.store.byId.cartItem2.owner,
+                2,
+                [
                     { type: 'topping', id: 'topping3' },
                     { type: 'topping', id: 'topping1' },
                     { type: 'topping', id: 'topping2' },
                 ],
-            });
+            ));
 
             expect(result).toEqual(expectation);
         });
 
         it('should not sum item quantity when item has same ownerId and options but different itemId', () => {
-            const newItem: app.entity.CartItem = createRandomCartItem('cartItem9', 'item4', 'owner2');
+            const newItem: app.entity.CartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item4', 'owner2');
             const expectation = createAddExpectation(this.store, newItem);
+            expectation.idCounter++;
 
-            const result = cartItems(this.store, {
-                type: ADD_CART_ITEM,
-                ...newItem,
-            });
+            const result = cartItems(this.store, createAddCartItemActionByEntity(newItem));
 
             expect(result).toEqual(expectation);
         });
 
         it('should not sum item quantity when item has same itemId and options but different ownerId', () => {
-            const newItem: app.entity.CartItem = createRandomCartItem('cartItem9', 'item3', 'owner4');
+            const newItem: app.entity.CartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item3', 'owner4');
             const expectation = createAddExpectation(this.store, newItem);
+            expectation.idCounter++;
 
             const result = cartItems(this.store, {
                 type: ADD_CART_ITEM,
@@ -127,8 +144,15 @@ describe('cartsReducer', function(this: TestEnv) {
         });
 
         it('should not sum item quantity when item has same itemId and ownerId but different options', () => {
-            const newItem: app.entity.CartItem = createRandomCartItem('cartItem9', 'item1', 'owner2', undefined, [ { type: 'topping', id: 'topping1' } ]);
+            const newItem: app.entity.CartItem = createRandomCartItem(
+                generateCartItemId(this.NEXT_ID),
+                'item1',
+                'owner2',
+                undefined,
+                [{ type: 'topping', id: 'topping1' }],
+            );
             const expectation = createAddExpectation(this.store, newItem);
+            expectation.idCounter++;
 
             const result = cartItems(this.store, {
                 type: ADD_CART_ITEM,
@@ -138,7 +162,7 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        storeShouldBeImmutable(this)(cartItems, addCartItem('cartItem9', 'item2', 'owner8', 3, []));
+        storeShouldBeImmutable(this)(cartItems, addCartItem('item2', 'owner8', 3, []));
     });
 
     describe('#updateCartItemQuantity', () => {
@@ -227,11 +251,13 @@ describe('cartsReducer', function(this: TestEnv) {
             const TEST_QUANTITY = 6;
             const TEST_OWNER = 'owner9';
             const TEST_CART_ITEM_ID = 'cartItem4';
+            const TEST_NEW_ID = generateCartItemId(this.NEXT_ID);
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            const item = createRandomCartItem('abc', this.store.byId[TEST_CART_ITEM_ID].item, TEST_OWNER, TEST_QUANTITY, []);
-            expectation.byId.abc = item;
-            expectation.allIds.push('abc');
+            const item = createRandomCartItem(TEST_NEW_ID, this.store.byId[TEST_CART_ITEM_ID].item, TEST_OWNER, TEST_QUANTITY, []);
+            expectation.byId[TEST_NEW_ID] = item;
+            expectation.allIds.push(TEST_NEW_ID);
+            expectation.idCounter++;
             const action = updateCartItemOptions(TEST_CART_ITEM_ID, [], {[TEST_OWNER]: TEST_QUANTITY});
 
             const result = cartItems(this.store, action);
@@ -290,5 +316,6 @@ interface CartItem extends app.store.Entity {
 }
 
 type TestEnv = {
+    NEXT_ID: number,
     store: app.store.ReadonlyStore<app.entity.CartItem>
 }
