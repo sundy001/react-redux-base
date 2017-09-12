@@ -79,7 +79,7 @@ const updateCartItem = (
             return updateCartItemQuantityAndOptions(tempState, existingItemId, state.byId[existingItemId].quantity + quantity);
         }
     } else {
-        return updateCartItemQuantityAndOptions(state, id, quantity, options);
+        return updateCartItemQuantityAndOptions(state, id, quantity);
     }
 };
 

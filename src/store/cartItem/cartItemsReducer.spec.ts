@@ -19,7 +19,6 @@ import {
     createRandomCartItem,
 } from 'services/test';
 import { generateEntityId } from 'services/storeUtil';
-import * as matchers from 'services/matchers';
 
 describe('cartsReducer', function(this: TestEnv) {
     const createAddCartItemActionByEntity = (cartItem: app.entity.CartItem): AddCartItemAction => {
@@ -31,8 +30,6 @@ describe('cartsReducer', function(this: TestEnv) {
     };
 
     beforeEach(() => {
-        jest.addMatchers(matchers as any);
-
         this.NEXT_ID = 9;
 
         this.store = {
@@ -308,7 +305,6 @@ describe('cartsReducer', function(this: TestEnv) {
         });
 
         it('should remove item when the quantity of item owner is < 0', () => {
-            const NEGATIVE_QUANTITY = -3;
             const CART_ITEM_ID = 'cartItem1';
             const cartItem = this.store.byId[CART_ITEM_ID];
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
@@ -319,7 +315,7 @@ describe('cartsReducer', function(this: TestEnv) {
                 CART_ITEM_ID,
                 cartItem.options,
                 {
-                    [cartItem.owner]: NEGATIVE_QUANTITY,
+                    [cartItem.owner]: -1,
                 },
             );
 
@@ -429,6 +425,31 @@ describe('cartsReducer', function(this: TestEnv) {
             const mergedItem = expectation.byId[MERGED_CART_ITEM_ID]
             mergedItem.quantity += QUANTITY;
             const action = updateCartItemOptions(CART_ITEM_ID, [], {[mergedItem.owner]: QUANTITY});
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        it('should merge and follow existing topping order when other uers have the same item', () => {
+            const QUANTITY = 1;
+            const CART_ITEM_ID = 'cartItem6';
+            const MERGED_CART_ITEM_ID = 'cartItem2';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID]
+            mergedItem.quantity += QUANTITY;
+            const action = updateCartItemOptions(
+                CART_ITEM_ID,
+                [
+                    {type: 'topping', id: 'topping3'},
+                    {type: 'topping', id: 'topping1'},
+                    {type: 'topping', id: 'topping2'},
+                ],
+                {
+                    [mergedItem.owner]: QUANTITY
+                }
+            );
 
             const result = cartItems(this.store, action);
 
