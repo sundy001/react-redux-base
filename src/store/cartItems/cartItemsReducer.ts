@@ -70,7 +70,7 @@ const updateCartItem = (
     } else if (quantity <= 0) {
         return removeCartItem(state, id);
     } else if (options !== undefined) {
-        const existingItemId = findIdentityItem(options, cartItem.item, cartItem.owner, state.byId);
+        const existingItemId = findIdentityItem(options, cartItem.item, cartItem.cart, state.byId);
 
         if (existingItemId === undefined || existingItemId === id) {
             return updateCartItemQuantityAndOptions(state, id, quantity, options);
@@ -86,7 +86,7 @@ const updateCartItem = (
 const addCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     item: string,
-    owner: string,
+    cart: string,
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
@@ -94,14 +94,14 @@ const addCartItem = (
         return state;
     }
 
-    const existingItemId = findIdentityItem(options, item, owner, state.byId);
+    const existingItemId = findIdentityItem(options, item, cart, state.byId);
     const id = generateEntityId('cartItem', state.idCounter);
 
     if (existingItemId === undefined) {
         return {
             byId: {
                 ...state.byId,
-                [id]: createCartItem(id, item, owner, quantity, options)
+                [id]: createCartItem(id, item, cart, quantity, options)
             },
             allIds: [ ...state.allIds, id ],
             idCounter: state.idCounter + 1,
@@ -115,7 +115,7 @@ const addCartItemByAction = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     action: AddCartItemAction,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
-    return addCartItem(state, action.item, action.owner, action.quantity, action.options);
+    return addCartItem(state, action.item, action.cart, action.quantity, action.options);
 };
 
 const updateCartItemQuantityByAction = (
@@ -132,15 +132,14 @@ const updateCartItemOptionsByAction = (
     assertEntityExist('cartItems', state, action.id);
 
     const targetCartItem = state.byId[action.id];
-    const originalOwner = targetCartItem.owner;
 
     let resultState = state;
-    Object.keys(action.quantityMap).forEach(owner => {
-        const quantity = action.quantityMap[owner];
+    Object.keys(action.quantityMap).forEach(cart => {
+        const quantity = action.quantityMap[cart];
 
-        resultState = owner === originalOwner
+        resultState = cart === targetCartItem.cart
             ? updateCartItem(resultState, action.id, quantity, action.options)
-            : addCartItem(resultState, targetCartItem.item, owner, quantity, action.options);
+            : addCartItem(resultState, targetCartItem.item, cart, quantity, action.options);
     });
 
     return resultState;

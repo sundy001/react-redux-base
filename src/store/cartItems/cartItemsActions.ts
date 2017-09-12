@@ -5,13 +5,13 @@ export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
 
 export const addCartItem = (
     item: string,
-    owner: string,
+    cart: string,
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): AddCartItemAction => ({
     type: ADD_CART_ITEM,
     item,
-    owner,
+    cart,
     quantity,
     options,
 });
@@ -46,7 +46,7 @@ export const removeCartItem = (
 export interface AddCartItemAction {
     readonly type: 'ADD_CART_ITEM';
     readonly item: string;
-    readonly owner: string;
+    readonly cart: string;
     readonly quantity: number;
     readonly options: ReadonlyArray<app.store.GenericId>;
 }

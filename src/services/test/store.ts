@@ -11,84 +11,47 @@ export function createAddExpectation<T extends app.store.Entity>(
     return expectation;
 }
 
-export const storeShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
-    return <T>(
-        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-        action: T
-    ): void => {
-        it('should return new state', () => {
-            const result = reducer(self.store, action);
-
-            expect(result).not.toBe(self.store);
-        });
-
-        it('should return different object of byId', () => {
-            const result = reducer(self.store, action);
-
-            expect(result.byId).not.toBe(self.store.byId);
-        });
-
-        it('should return different object of allIds', () => {
-            const result = reducer(self.store, action);
-
-            expect(result.allIds).not.toBe(self.store.allIds);
-        });
-    }
-};
-
-export const storeByIdShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
-    return <T>(
-        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-        action: T
-    ): void => {
-        it('should return new state', () => {
-            const result = reducer(self.store, action);
-
-            expect(result).not.toBe(self.store);
-        });
-
-        it('should return different object of byId', () => {
-            const result = reducer(self.store, action);
-
-            expect(result.byId).not.toBe(self.store.byId);
-        });
-    }
-};
-
-export const storeAllIdsShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
-    return <T>(
-        reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-        action: T
-    ): void => {
-        it('should return new state', () => {
-            const result = reducer(self.store, action);
-
-            expect(result).not.toBe(self.store);
-        });
-
-        it('should return different object of allIds', () => {
-            const result = reducer(self.store, action);
-
-            expect(result.allIds).not.toBe(self.store.allIds);
-        });
-    }
-};
-
-export const propertyShouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+export const shouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
         reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
         action: T,
-        path: string,
+        paths: ReadonlyArray<string>,
+        state?: string,
     ): void  => {
-        it(`should return different object of entity.${path}`, () => {
-            const result = reducer(self.store, action);
+        const testedPathsMap: {[path: string]: boolean} = {};
 
-            expect(get(result.byId, path)).not.toBe(get(self.store.byId, path));
+        const stateDesc = state === undefined ? '' : ' ' + state;
+
+        it(`should be immutable at store${stateDesc}`, () => {
+            const result = reducer(self.store, action);
+            expect(result).not.toBe(self.store);
+        });
+
+        paths.forEach(path => {
+            let testPath = '';
+            path.split('.').forEach(partialPath => {
+                testPath += testPath === ''
+                    ? partialPath
+                    : '.' + partialPath
+                ;
+
+                if (testedPathsMap[testPath]) {
+                    return;
+                }
+
+                testedPathsMap[testPath] = true;
+
+                console.log(testPath);
+                it(`should be immutable at ${testPath}${stateDesc}`, () => {
+                    const result = reducer(self.store, action);
+                    expect(get(result, testPath)).not.toBe(get(self.store, testPath));
+                });
+            })
         });
     }
 };
 
-export const entityNotFoundShouldThrowError = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+export const shouldThrowErrorWhenEntityNotFound = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
     return <T>(
         reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
         action: T

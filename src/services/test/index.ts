@@ -1,9 +1,6 @@
 export {
     createAddExpectation,
-    entityNotFoundShouldThrowError,
-    storeShouldBeImmutable,
-    storeByIdShouldBeImmutable,
-    storeAllIdsShouldBeImmutable,
-    propertyShouldBeImmutable,
+    shouldThrowErrorWhenEntityNotFound,
+    shouldBeImmutable,
 } from './store';
 export { createRandomCartItem } from './entityFactory';

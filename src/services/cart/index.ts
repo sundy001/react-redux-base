@@ -18,7 +18,7 @@ export const isSameOptions = (
 export const findIdentityItem = (
     options: ReadonlyArray<app.store.GenericId>,
     item: string,
-    owner: string,
+    cart: string,
     store: app.store.ReadonlyIdStore<app.entity.CartItem>,
 ) => {
     const sortedOptions = options.map(itemOptionMapper).sort();
@@ -35,7 +35,7 @@ export const findIdentityItem = (
         }
 
         return cartItem.item === item &&
-            cartItem.owner === owner &&
+            cartItem.cart === cart &&
             hasSameOptions
         ;
     });

@@ -1,6 +1,6 @@
 import { random } from 'faker';
 import { app } from './faker';
-import { createCartItem } from 'store/cartItem';
+import { createCartItem } from 'store/cartItems';
 
 const valueOrDefault = <T>(value: T, defaultValue: T): T => {
     return value !== undefined ? value : defaultValue;
