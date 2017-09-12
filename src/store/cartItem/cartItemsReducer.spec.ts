@@ -52,8 +52,9 @@ describe('cartsReducer', function(this: TestEnv) {
                 cartItem3: {id: 'cartItem3', item: 'item3', owner: 'user3', quantity: 7, options: []},
                 cartItem4: {id: 'cartItem4', item: 'item2', owner: 'user2', quantity: 2, options: []},
                 cartItem5: {id: 'cartItem5', item: 'item3', owner: 'user4', quantity: 2, options: []},
+                cartItem6: {id: 'cartItem6', item: 'item2', owner: 'user5', quantity: 1, options: [{type: 'topping', id: 'topping3'}]},
             },
-            allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5'],
+            allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5', 'cartItem6'],
             idCounter: this.NEXT_ID,
         };
     });
@@ -91,7 +92,7 @@ describe('cartsReducer', function(this: TestEnv) {
 
             const cartItem = this.store.byId[CART_ITEM_ID];
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            expectation.byId.cartItem1.quantity += QUANTITY;
+            expectation.byId[CART_ITEM_ID].quantity += QUANTITY;
 
             const result = cartItems(this.store, addCartItem(
                 cartItem.item,
@@ -109,7 +110,7 @@ describe('cartsReducer', function(this: TestEnv) {
 
             const cartItem = this.store.byId[CART_ITEM_ID];
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            expectation.byId.cartItem2.quantity += QUANTITY;
+            expectation.byId[CART_ITEM_ID].quantity += QUANTITY;
 
             const result = cartItems(this.store, addCartItem(
                 cartItem.item,
@@ -266,7 +267,6 @@ describe('cartsReducer', function(this: TestEnv) {
         });
 
         it('should remove item when the quantity of item owner is 0', () => {
-            const ZERO_QUANTITY = 0;
             const CART_ITEM_ID = 'cartItem1';
             const cartItem = this.store.byId[CART_ITEM_ID];
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
@@ -277,7 +277,28 @@ describe('cartsReducer', function(this: TestEnv) {
                 CART_ITEM_ID,
                 cartItem.options,
                 {
-                    [cartItem.owner]: ZERO_QUANTITY,
+                    [cartItem.owner]: 0,
+                },
+            );
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        it('should not merge and remove item when the quantity of item owner is 0', () => {
+            const CART_ITEM_ID1 = 'cartItem4';
+            const CART_ITEM_ID2 = 'cartItem2';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            delete expectation.byId[CART_ITEM_ID1];
+            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID1);
+
+            const action = updateCartItemOptions(
+                CART_ITEM_ID1,
+                this.store.byId[CART_ITEM_ID2].options,
+                {
+                    [this.store.byId[CART_ITEM_ID1].owner]: 0,
                 },
             );
 
@@ -307,21 +328,39 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
+        it('should return ideintity item object when quantity and options are same', () => {
+            const CART_ITEM_ID = 'cartItem3';
+            const TEST_OWNER = 'user4';
+
+            const cartItem = this.store.byId[CART_ITEM_ID];
+            const action = updateCartItemOptions(
+                cartItem.id,
+                cartItem.options,
+                {
+                    [cartItem.owner]: cartItem.quantity,
+                    [TEST_OWNER]: 0,
+                },
+            );
+
+            const result = cartItems(this.store, action);
+            expect(result).toBe(this.store);
+        });
+
         it('should merge to exist item when the item owner has the same item', () => {
             const QUANTITY = 6;
-            const CART_ITEM_ID1 = 'cartItem4';
-            const CART_ITEM_ID2 = 'cartItem2';
+            const CART_ITEM_ID = 'cartItem4';
+            const MERGED_CART_ITEM_ID = 'cartItem2';
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            expectation.byId[CART_ITEM_ID2].quantity += QUANTITY;
-            delete expectation.byId[CART_ITEM_ID1];
-            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID1);
+            expectation.byId[MERGED_CART_ITEM_ID].quantity += QUANTITY;
+            delete expectation.byId[CART_ITEM_ID];
+            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID);
 
             const action = updateCartItemOptions(
-                CART_ITEM_ID1,
-                this.store.byId[CART_ITEM_ID2].options,
+                CART_ITEM_ID,
+                this.store.byId[MERGED_CART_ITEM_ID].options,
                 {
-                    [this.store.byId[CART_ITEM_ID1].owner]: QUANTITY,
+                    [this.store.byId[CART_ITEM_ID].owner]: QUANTITY,
                 },
             );
 
@@ -332,45 +371,23 @@ describe('cartsReducer', function(this: TestEnv) {
 
         it('should merge and follow existing topping order when the item owner has the same item', () => {
             const QUANTITY = 3;
-            const CART_ITEM_ID1 = 'cartItem4';
-            const CART_ITEM_ID2 = 'cartItem2';
+            const CART_ITEM_ID = 'cartItem4';
+            const MERGED_CART_ITEM_ID = 'cartItem2';
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            expectation.byId[CART_ITEM_ID2].quantity += QUANTITY;
-            delete expectation.byId[CART_ITEM_ID1];
-            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID1);
+            expectation.byId[MERGED_CART_ITEM_ID].quantity += QUANTITY;
+            delete expectation.byId[CART_ITEM_ID];
+            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID);
 
             const action = updateCartItemOptions(
-                CART_ITEM_ID1,
+                CART_ITEM_ID,
                 [
                     {type: 'topping', id: 'topping3'},
                     {type: 'topping', id: 'topping1'},
                     {type: 'topping', id: 'topping2'},
                 ],
                 {
-                    [this.store.byId[CART_ITEM_ID1].owner]: QUANTITY,
-                },
-            );
-
-            const result = cartItems(this.store, action);
-
-            expect(result).toEqual(expectation);
-        });
-
-        it('should not merge and remove item when the quantity of item owner is 0', () => {
-            const ZERO_QUANTITY = 0;
-            const CART_ITEM_ID1 = 'cartItem4';
-            const CART_ITEM_ID2 = 'cartItem2';
-
-            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            delete expectation.byId[CART_ITEM_ID1];
-            expectation.allIds = expectation.allIds.filter(id => id !== CART_ITEM_ID1);
-
-            const action = updateCartItemOptions(
-                CART_ITEM_ID1,
-                this.store.byId[CART_ITEM_ID2].options,
-                {
-                    [this.store.byId[CART_ITEM_ID1].owner]: ZERO_QUANTITY,
+                    [this.store.byId[MERGED_CART_ITEM_ID].owner]: QUANTITY,
                 },
             );
 
@@ -403,9 +420,25 @@ describe('cartsReducer', function(this: TestEnv) {
             expect(result).toEqual(expectation);
         });
 
-        it('should return ideintity item object when quantity and options are same', () => {
+        it('should merge to exisiting item when other users have the same item', () => {
+            const QUANTITY = 6;
+            const CART_ITEM_ID = 'cartItem6';
+            const MERGED_CART_ITEM_ID = 'cartItem4';
+
+            const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
+            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID]
+            mergedItem.quantity += QUANTITY;
+            const action = updateCartItemOptions(CART_ITEM_ID, [], {[mergedItem.owner]: QUANTITY});
+
+            const result = cartItems(this.store, action);
+
+            expect(result).toEqual(expectation);
+        });
+
+        it('should return ideintity item object when other user quantity is 0', () => {
             const CART_ITEM_ID = 'cartItem3';
-            const TEST_OWNER = 'user4';
+            const TEST_USER1 = 'user2';
+            const TEST_USER2 = 'user4';
 
             const cartItem = this.store.byId[CART_ITEM_ID];
             const action = updateCartItemOptions(
@@ -413,7 +446,28 @@ describe('cartsReducer', function(this: TestEnv) {
                 cartItem.options,
                 {
                     [cartItem.owner]: cartItem.quantity,
-                    [TEST_OWNER]: 0,
+                    [TEST_USER1]: 0,
+                    [TEST_USER2]: 0,
+                },
+            );
+
+            const result = cartItems(this.store, action);
+            expect(result).toBe(this.store);
+        });
+
+        it('should return ideintity item object when other user quantity is < 0', () => {
+            const CART_ITEM_ID = 'cartItem3';
+            const TEST_USER1 = 'user2';
+            const TEST_USER2 = 'user4';
+
+            const cartItem = this.store.byId[CART_ITEM_ID];
+            const action = updateCartItemOptions(
+                cartItem.id,
+                cartItem.options,
+                {
+                    [cartItem.owner]: cartItem.quantity,
+                    [TEST_USER1]: -3,
+                    [TEST_USER2]: -4,
                 },
             );
 
