@@ -6,11 +6,13 @@
     "typings": "typings",
     "build": "webpack",
     "devserver": "webpack-dev-server",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "author": "Jason LI",
   "license": "ISC",
   "devDependencies": {
+    "@storybook/react": "^3.2.8",
     "@types/classnames": "^2.2.3",
     "@types/faker": "^4.1.1",
     "@types/jest": "^20.0.8",

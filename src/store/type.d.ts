@@ -5,14 +5,14 @@ declare namespace app {
             lng: number;
         }
 
-        enum DeliveryType {
-            Delivery = 'Delivery',
-            Pickup = 'Pickup'
+        interface TimeOption extends store.Entity {
+            name: string;
+            date: Date;
         }
 
-        interface Order {
-            deliveryTime: string;
-            deliveryType: DeliveryType;
+        interface DateOption extends store.Entity {
+            name: string;
+            date: Date;
         }
 
         interface CartItem extends store.Entity {
@@ -20,6 +20,11 @@ declare namespace app {
             readonly cart: string;
             readonly quantity: number;
             readonly options: ReadonlyArray<store.GenericId>;
+        }
+
+        interface Cart extends store.Entity {
+            readonly name: string;
+            readonly owner: string;
         }
 
         interface Restaurant extends store.Entity {
@@ -32,11 +37,6 @@ declare namespace app {
             readonly latLng: LatLng;
             readonly logoURL: string | undefined;
             readonly categories: ReadonlyArray<string>;
-        }
-
-        interface Cart extends store.Entity {
-            readonly name: string;
-            readonly owner: string;
         }
 
         interface Category extends store.Entity {
@@ -68,27 +68,45 @@ declare namespace app {
 
         interface User extends store.Entity {
             readonly email: string;
+            readonly isAnonymous: boolean;
             readonly firstName: string;
             readonly lastName: string;
         }
     }
 
     namespace store {
+        enum DeliveryType {
+            Delivery = 'Delivery',
+            Pickup = 'Pickup'
+        }
+
         interface RootStore {
+            readonly deliveryType: DeliveryType;
+            readonly currentDate: string;
+            readonly currentTime: string;
             readonly currentUser: string;
             readonly host: string;
             readonly guests: ReadonlyArray<string>;
+            readonly currentCategory: string;
             readonly currentRestaurant: string;
             readonly currentCarts: ReadonlyArray<string>;
 
-            readonly categories: Store<entity.Category>;
-            readonly products: Store<entity.Product>;
-            readonly optionsGroups: Store<entity.OptionGroup>;
-            readonly options: Store<entity.Option>;
-            readonly restaurants: Store<entity.Restaurant>;
-            readonly users: Store<entity.User>;
-            readonly carts: Store<entity.Cart>;
-            readonly cartItems: Store<entity.CartItem>;
+            readonly ui: {
+
+            }
+
+            readonly entity: {
+                readonly categories: Store<entity.Category>;
+                readonly products: Store<entity.Product>;
+                readonly optionsGroups: Store<entity.OptionGroup>;
+                readonly options: Store<entity.Option>;
+                readonly restaurants: Store<entity.Restaurant>;
+                readonly users: Store<entity.User>;
+                readonly carts: Store<entity.Cart>;
+                readonly cartItems: Store<entity.CartItem>;
+                readonly dateOptions: Store<entity.DateOption>;
+                readonly timeOptions: Store<entity.TimeOption>;
+            }
         }
 
         type IdStore<T extends Entity> = {
