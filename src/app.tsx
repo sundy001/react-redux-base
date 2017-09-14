@@ -3,9 +3,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import './style';
-import Button from 'components/Button';
+import { Button } from 'components/Button';
 import Modal from 'components/Modal';
-import List from 'components/List';
+import { List } from 'components/List';
 import { StickyContainer, Sticky } from 'components/Sticky';
 
 const items = [

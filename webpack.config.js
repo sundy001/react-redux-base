@@ -22,7 +22,6 @@ module.exports = {
         extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', '.scss'],
         alias: {
             'style-mixin': path.join(__dirname, '/src/scss/all'),
-            'app': path.join(__dirname, '/src'),
             'components': path.join(__dirname, '/src/components'),
             'scenes': path.join(__dirname, '/src/scenes'),
             'services': path.join(__dirname, '/src/services'),
