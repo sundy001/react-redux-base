@@ -25,7 +25,7 @@ module.exports = (baseConfig, env) => {
     config.module.rules.push({
         test: /.scss$/,
         loaders: ["style-loader", "css-loader", "sass-loader"],
-        include: [/components/]
+        include: [/src/]
     })
 
     return config;

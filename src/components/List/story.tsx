@@ -1,3 +1,4 @@
+import 'what-input';
 import * as React from 'react';
 import ListWrapper from './ListWrapper';
 import { storiesOf } from '@storybook/react';

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { List, ListItem } from './List';
+import { action } from '@storybook/addon-actions';
 
 export default class DateRangePickerWrapper extends React.Component<Props, State> {
     constructor(props: Props) {
@@ -17,6 +18,7 @@ export default class DateRangePickerWrapper extends React.Component<Props, State
     }
 
     onClick = (event: React.MouseEvent<HTMLLIElement>) => {
+        action('clicked')(event);
         const items = this.state.items.map(item => {
             // TODO: change to string key?
             const shouldActive = event.currentTarget.dataset.id === item.id + '';

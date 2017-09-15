@@ -1,4 +1,4 @@
-import './style';
+import '../../scss/all';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
@@ -17,10 +17,11 @@ export const List = ({
             onClick={onClick}
         >
             <a
-                className={classNames({
-                    'jason-submenu__link': true,
-                    'is-active': isActive,
-                })}
+                className={
+                    classNames('submenu__link', {
+                        'is-active': isActive,
+                    })
+                }
                 href="javascript:void(0)"
             >
                 {title}
@@ -29,7 +30,7 @@ export const List = ({
     ));
 
     return (
-        <ul className="jason-submenu">
+        <ul className="submenu">
             {listItems}
         </ul>
     );
