@@ -1,14 +1,14 @@
 import 'what-input';
 import * as React from 'react';
-import Button from './Button';
+import WaveButton from './WaveButton';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-storiesOf('Button', module)
+storiesOf('WaveButton', module)
     .add('with text', () => (
-        <Button onClick={action('clicked')}>Hello Button</Button>
+        <WaveButton onClick={action('clicked')}>Hello Button</WaveButton>
     ))
     .add('with some emoji', () => (
-        <Button onClick={action('clicked')}>😀 😎 👍 💯</Button>
+        <WaveButton onClick={action('clicked')}>😀 😎 👍 💯</WaveButton>
     ))
 ;

@@ -1,28 +1,29 @@
 import '../../scss/all';
 import * as React from 'react';
 import * as createClassNames from 'classnames';
+import { WaveEffect } from 'components/WaveEffect';
+import { Button } from 'components/Button';
 
 const { PropTypes } = React;
 
-const Button: React.StatelessComponent<Props> = ({
+const WaveButton: React.StatelessComponent<Props> = ({
     children,
     ...props
 }: Props) => {
     return (
-        <button
-            className={
-                createClassNames('button')
-            }
-            {...props}
-        >
-            {children}
-        </button>
+        <WaveEffect isLight>
+            <Button
+                {...props}
+            >
+                {children}
+            </Button>
+        </WaveEffect>
     );
 }
 
-export default Button;
+export default WaveButton;
 
-Button.propTypes = {
+WaveButton.propTypes = {
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node,
@@ -31,7 +32,7 @@ Button.propTypes = {
     onClick: PropTypes.func,
 };
 
-Button.defaultProps = {
+WaveButton.defaultProps = {
     disabled: false
 };
 
