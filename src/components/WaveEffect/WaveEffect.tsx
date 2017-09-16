@@ -7,7 +7,7 @@ import { offset, isMouseEvent, isTouchEvent } from 'services/dom';
 const { PropTypes } = React;
 
 export default class WaveEffect extends React.Component<Props> {
-    private childElem: HTMLElement;
+    private containerElem: HTMLElement;
 
     static propTypes = {
         children: PropTypes.element.isRequired,
@@ -35,10 +35,9 @@ export default class WaveEffect extends React.Component<Props> {
     }
 
     onMouseDown = ({ nativeEvent, target }: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-        const element = this.childElem as HTMLElement;
-        this.show(nativeEvent, element);
-        element.addEventListener('mouseup', this.hide, false);
-        element.addEventListener('mouseleave', this.hide, false);
+        this.show(nativeEvent, this.containerElem);
+        this.containerElem.addEventListener('mouseup', this.hide, false);
+        this.containerElem.addEventListener('mouseleave', this.hide, false);
         // TODO: support multiple touches
     }
 
@@ -134,7 +133,9 @@ export default class WaveEffect extends React.Component<Props> {
         relativeX = relativeX >= 0 ? relativeX : 0;
         relativeY = relativeY >= 0 ? relativeY : 0;
 
-        const scale = `scale(${(element.clientWidth / 100) * 3})`;
+        // TODO: value should be configurable
+        const scale = Math.min((element.clientWidth / 100) * 3, 6);
+        const scaleStyle = `scale(${scale})`;
         const translate = 'translate(0,0)';
 
         // if (velocity) {
@@ -145,7 +146,7 @@ export default class WaveEffect extends React.Component<Props> {
         ripple.setAttribute('data-hold', Date.now().toString());
         ripple.setAttribute('data-x', relativeX + '');
         ripple.setAttribute('data-y', relativeY + '');
-        ripple.setAttribute('data-scale', scale);
+        ripple.setAttribute('data-scale', scaleStyle);
         ripple.setAttribute('data-translate', translate);
 
         // Set ripple position
@@ -159,11 +160,11 @@ export default class WaveEffect extends React.Component<Props> {
         ripple.classList.remove('waves-notransition');
 
         // Scale the ripple
-        rippleStyle['-webkit-transform'] = scale + ' ' + translate;
-        rippleStyle['-moz-transform'] = scale + ' ' + translate;
-        rippleStyle['-ms-transform'] = scale + ' ' + translate;
-        rippleStyle['-o-transform'] = scale + ' ' + translate;
-        rippleStyle.transform = scale + ' ' + translate;
+        rippleStyle['-webkit-transform'] = scaleStyle + ' ' + translate;
+        rippleStyle['-moz-transform'] = scaleStyle + ' ' + translate;
+        rippleStyle['-ms-transform'] = scaleStyle + ' ' + translate;
+        rippleStyle['-o-transform'] = scaleStyle + ' ' + translate;
+        rippleStyle.transform = scaleStyle + ' ' + translate;
         rippleStyle.opacity = '1';
 
         const duration = e.type === 'mousemove' ? 2500 : this.props.duration;
@@ -176,23 +177,23 @@ export default class WaveEffect extends React.Component<Props> {
     }
 
     hide = (e: Event): void => {
-        const element = e.target as HTMLElement;
-        const ripples = Array.from(element.getElementsByClassName('waves-rippling'));
+        const ripples = Array.from(this.containerElem.getElementsByClassName('waves-rippling'));
 
         ripples.forEach(ripple => {
-            this.removeRipple(e, element, ripple);
+            console.log('hideA');
+            this.removeRipple(e, this.containerElem, ripple);
         });
 
-        element.removeEventListener('touchend', this.hide);
-        element.removeEventListener('touchcancel', this.hide);
-        element.removeEventListener('mouseup', this.hide);
-        element.removeEventListener('mouseleave', this.hide);
+        this.containerElem.removeEventListener('touchend', this.hide);
+        this.containerElem.removeEventListener('touchcancel', this.hide);
+        this.containerElem.removeEventListener('mouseup', this.hide);
+        this.containerElem.removeEventListener('mouseleave', this.hide);
     }
 
     componentDidMount() {
         const currentDom = ReactDOM.findDOMNode(this);
         const childElem = currentDom.childNodes[0] as HTMLElement;
-        this.childElem = childElem;
+        this.containerElem = childElem;
         childElem.classList.add('waves-effect');
         if (this.props.isLight) {
             childElem.classList.add('waves-light');

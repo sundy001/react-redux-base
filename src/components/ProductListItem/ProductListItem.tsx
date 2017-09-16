@@ -8,10 +8,14 @@ const ProductListItem: React.StatelessComponent<Props> = ({
     imageURL,
     name,
     description,
-    price
+    price,
+    onClick,
 }: Props) => {
     return (
-        <li className="list-card">
+        <li
+            className="list-card"
+            onClick={onClick}
+        >
             {imageURL &&
                 <div
                     className="list-card-image"
@@ -43,6 +47,7 @@ ProductListItem.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
     price: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
 };
 
 ProductListItem.defaultProps = {
@@ -51,9 +56,10 @@ ProductListItem.defaultProps = {
 };
 
 type Props = {
-    children?: any;
+    readonly children?: any;
     readonly imageURL? : string;
-    name: string;
-    description?: string;
-    price: string;
+    readonly name: string;
+    readonly description?: string;
+    readonly price: string;
+    readonly onClick?: React.EventHandler<React.MouseEvent<HTMLLIElement>>;
 }
