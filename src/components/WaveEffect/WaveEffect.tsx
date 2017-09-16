@@ -7,6 +7,8 @@ import { offset, isMouseEvent, isTouchEvent } from 'services/dom';
 const { PropTypes } = React;
 
 export default class WaveEffect extends React.Component<Props> {
+    private childElem: HTMLElement;
+
     static propTypes = {
         children: PropTypes.element.isRequired,
         duration: PropTypes.number,
@@ -33,8 +35,8 @@ export default class WaveEffect extends React.Component<Props> {
     }
 
     onMouseDown = ({ nativeEvent, target }: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-        const element = target as HTMLElement;
-        this.show(nativeEvent,element);
+        const element = this.childElem as HTMLElement;
+        this.show(nativeEvent, element);
         element.addEventListener('mouseup', this.hide, false);
         element.addEventListener('mouseleave', this.hide, false);
         // TODO: support multiple touches
@@ -190,6 +192,7 @@ export default class WaveEffect extends React.Component<Props> {
     componentDidMount() {
         const currentDom = ReactDOM.findDOMNode(this);
         const childElem = currentDom.childNodes[0] as HTMLElement;
+        this.childElem = childElem;
         childElem.classList.add('waves-effect');
         if (this.props.isLight) {
             childElem.classList.add('waves-light');
@@ -199,6 +202,7 @@ export default class WaveEffect extends React.Component<Props> {
     render() {
         return (
             <div
+                style={{width: '100%'}}
                 onMouseDown={this.onMouseDown}
                 onTouchStart={this.onMouseDown}
             >

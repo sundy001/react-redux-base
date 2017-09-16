@@ -17,13 +17,15 @@
 // Icon font
 @import 'icon-font/font-awesome';
 
+@import 'typography/typography';
 @import 'components/menu';
 @import 'components/button';
 @import 'components/wave-effect';
 @import 'components/list';
 
 @include foundation-global-styles;
-@include font-awesome ;
+@include foundation-typography;
+@include font-awesome;
 @include foundation-button;
 @include submenu;
 @include list-card;

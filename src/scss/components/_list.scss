@@ -7,8 +7,45 @@
     flex-wrap: wrap;
 }
 
+@mixin list-card-base {
+    display: flex;
+    width: 100%;
+}
+
 @mixin list-card {
     .list {
         @include list-base;
+    }
+
+    .list-card {
+        @include list-card-base;
+        cursor: pointer;
+    }
+
+    .list-cart-section {
+        flex-grow: 1;
+        padding: 1rem;
+    }
+
+    .product-header {
+        display: flex;
+        width: 100%;
+        .name {
+            flex-grow: 1;
+        }
+
+        .price {
+            color: $dark-gray;
+            width: 7rem;
+            text-align: right;
+        }
+    }
+
+    .list-card-image {
+        width: 302px;
+        height: 160px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        flex-shrink: 0;
     }
 }
