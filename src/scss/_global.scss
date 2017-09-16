@@ -101,10 +101,6 @@ $global-menu-nested-margin: 1rem !default;
 /// @type Keyword
 $global-text-direction: ltr !default;
 
-/// Enables flexbox for components that support it.
-/// @type Boolean
-$global-flexbox: true !default;
-
 /// Enabled responsive breakpoints for prototypes if applicable
 /// @type Boolean
 $global-prototype-breakpoints: false !default;

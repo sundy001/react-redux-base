@@ -8,21 +8,22 @@
 @import '_vendor/sassy-lists/stylesheets/functions/replace';
 @import '_vendor/sassy-lists/stylesheets/functions/to-list';
 
-// Settings
-// import your own `settings` here or
-// import and modify the default settings through
-// @import 'settings/settings';
-
 // Sass utilities
 @import 'util/util';
 
 // Global variables and styles
 @import 'global';
 
+// Icon font
+@import 'icon-font/font-awesome';
+
 @import 'components/menu';
 @import 'components/button';
 @import 'components/wave-effect';
+@import 'components/list';
 
 @include foundation-global-styles;
+@include font-awesome ;
 @include foundation-button;
 @include submenu;
+@include list-card;

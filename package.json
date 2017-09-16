@@ -4,10 +4,10 @@
   "description": "",
   "scripts": {
     "typings": "typings",
-    "build": "webpack",
+    "build": "webpack -p",
     "devserver": "webpack-dev-server",
     "test": "jest",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "storybook": "start-storybook -s ./assets -p 9001 -c .storybook"
   },
   "author": "Jason LI",
   "license": "ISC",

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, ListItem } from './List';
+import { Submenu, SubmenuItem } from './Submenu';
 import { action } from '@storybook/addon-actions';
 
 export default class DateRangePickerWrapper extends React.Component<Props, State> {
@@ -37,7 +37,7 @@ export default class DateRangePickerWrapper extends React.Component<Props, State
     render() {
         const { items } = this.state;
         return (
-            <List items={items} onClick={this.onClick}></List>
+            <Submenu items={items} onClick={this.onClick}></Submenu>
         );
     }
 }
@@ -47,5 +47,5 @@ interface Props {
 }
 
 interface State {
-    items: ReadonlyArray<ListItem>;
+    items: ReadonlyArray<SubmenuItem>;
 }

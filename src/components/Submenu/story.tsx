@@ -1,10 +1,10 @@
 import 'what-input';
 import * as React from 'react';
-import ListWrapper from './ListWrapper';
+import SubmenuWrapper from './SubmenuWrapper';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-storiesOf('List', module)
+storiesOf('Submenu', module)
   .add('normal', () => (
-    <ListWrapper></ListWrapper>
+    <SubmenuWrapper></SubmenuWrapper>
   ))

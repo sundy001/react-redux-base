@@ -2,11 +2,11 @@ import '../../scss/all';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-export const List = ({
+export const Submenu = ({
     items,
     onClick,
 }: Props) => {
-    const listItems = items.map(({
+    const submenuItems = items.map(({
         id,
         title,
         isActive,
@@ -31,19 +31,19 @@ export const List = ({
 
     return (
         <ul className="submenu">
-            {listItems}
+            {submenuItems}
         </ul>
     );
 }
 
-export type ListItem =  {
+export type SubmenuItem =  {
     id: number,
     title: string,
     isActive: boolean
 };
 
 type Props = {
-    readonly items: ReadonlyArray<ListItem>
+    readonly items: ReadonlyArray<SubmenuItem>
     readonly onClick?: React.MouseEventHandler<HTMLLIElement>
 };
 

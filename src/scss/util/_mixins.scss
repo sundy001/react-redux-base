@@ -7,7 +7,7 @@
 ////
 
 /// Creates an inner box-shadow for only one side
-/// 
+///
 /// @param {Keyword} $side - Side the shadow is supposed to appear. Can be `top`, `left`, `right` or `bottom`.
 /// @param {Number} $size - Width for the target side.
 /// @param {Color} $color - Color of the shadow.
@@ -171,11 +171,8 @@
   &::after {
     display: table;
     content: ' ';
-
-    @if $global-flexbox {
-      flex-basis: 0;
-      order: 1;
-    }
+    flex-basis: 0;
+    order: 1;
   }
 
   &::after {

@@ -2,10 +2,10 @@ import "reflect-metadata";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import './style';
+import './scss/all';
 import { Button } from 'components/Button';
 import Modal from 'components/Modal';
-import { List } from 'components/List';
+import { Submenu } from 'components/Submenu';
 import { StickyContainer, Sticky } from 'components/Sticky';
 
 const items = [
@@ -18,7 +18,7 @@ const items = [
 
 ReactDOM.render(
     <div>
-        <List items={items}></List>
+        <Submenu items={items}></Submenu>
     </div>,
     document.getElementById('app')
 );
