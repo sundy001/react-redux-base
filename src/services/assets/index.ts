@@ -22,11 +22,11 @@ export const assertEntitiesExist = (
     }
 
     const idMap: {[id: string]: boolean} = {};
-    store.allIds.forEach(id => {
+    store.allIds.forEach((id) => {
         idMap[id] = true;
     });
 
-    ids.forEach(id => {
+    ids.forEach((id) => {
         if (store.byId[id] === undefined) {
             throw new Error(`Id "${id}" is not found in ${storeName}.byId`);
         }

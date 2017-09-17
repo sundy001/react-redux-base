@@ -33,7 +33,7 @@ const updateCartItemQuantityAndOptions = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     id: string,
     quantity: number,
-    options?: ReadonlyArray<app.store.GenericId>
+    options?: ReadonlyArray<app.store.GenericId>,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
     const item = {
         ...state.byId[id],
@@ -58,7 +58,7 @@ const updateCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     id: string,
     quantity: number,
-    options?: ReadonlyArray<app.store.GenericId>
+    options?: ReadonlyArray<app.store.GenericId>,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
     assertEntityExist('cartItems', state, id);
 
@@ -76,7 +76,11 @@ const updateCartItem = (
             return updateCartItemQuantityAndOptions(state, id, quantity, options);
         } else {
             const tempState = removeCartItem(state, id);
-            return updateCartItemQuantityAndOptions(tempState, existingItemId, state.byId[existingItemId].quantity + quantity);
+            return updateCartItemQuantityAndOptions(
+                tempState,
+                existingItemId,
+                state.byId[existingItemId].quantity + quantity,
+            );
         }
     } else {
         return updateCartItemQuantityAndOptions(state, id, quantity);
@@ -101,7 +105,7 @@ const addCartItem = (
         return {
             byId: {
                 ...state.byId,
-                [id]: createCartItem(id, item, cart, quantity, options)
+                [id]: createCartItem(id, item, cart, quantity, options),
             },
             allIds: [ ...state.allIds, id ],
             idCounter: state.idCounter + 1,
@@ -152,7 +156,10 @@ const removeCartItemByAction = (
     return removeCartItem(state, action.id);
 };
 
-export default (state: app.store.ReadonlyStore<app.entity.CartItem>, action: Action): app.store.ReadonlyStore<app.entity.CartItem> => {
+export default (
+    state: app.store.ReadonlyStore<app.entity.CartItem>,
+    action: Action,
+): app.store.ReadonlyStore<app.entity.CartItem> => {
     switch(action.type) {
         case ADD_CART_ITEM: return addCartItemByAction(state, action);
         case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantityByAction(state, action);

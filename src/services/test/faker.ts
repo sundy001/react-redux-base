@@ -2,7 +2,7 @@ import { random } from 'faker';
 
 export const app = {
     entityId(entityName: string, min = 1, max = 20) {
-        return `${entityName}${random.number({min, max})}`;
+        return `${ entityName }${ random.number({min, max}) }`;
     },
 
     genericIds(
@@ -17,7 +17,7 @@ export const app = {
         for (let i = 0; i < length; i++) {
             result.push({
                 type,
-                id: app.entityId(type)
+                id: app.entityId(type),
             });
         }
 
