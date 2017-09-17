@@ -20,9 +20,9 @@ export const updateCartItemQuantity = (
     id: string,
     quantity: number,
 ): UpdateCartItemQuantityAction => ({
-    type: UPDATE_CART_ITEM_QUANTITY,
     id,
     quantity,
+    type: UPDATE_CART_ITEM_QUANTITY,
 });
 
 export const updateCartItemOptions = (
@@ -30,17 +30,17 @@ export const updateCartItemOptions = (
     options:ReadonlyArray<app.store.GenericId>,
     quantityMap: OwnerQuantityMap,
 ): UpdateCartItemOptionsAction => ({
-    type: UPDATE_CART_ITEM_OPTIONS,
     id,
     options,
     quantityMap,
+    type: UPDATE_CART_ITEM_OPTIONS,
 });
 
 export const removeCartItem = (
     id: string,
 ): RemoveCartItemAction => ({
-    type: REMOVE_CART_ITEM,
     id,
+    type: REMOVE_CART_ITEM,
 });
 
 export interface AddCartItemAction {

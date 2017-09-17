@@ -11,7 +11,7 @@ import {
 import { assertEntityExist, assertEntitiesExist } from 'services/assets';
 import { findIdentityItem, isSameOptions } from 'services/cart';
 import { generateEntityId } from 'services/storeUtil';
-import createCartItem from './cartItemFactory';
+import createCartItem from './createCartItem';
 
 const removeCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
@@ -138,7 +138,7 @@ const updateCartItemOptionsByAction = (
     const targetCartItem = state.byId[action.id];
 
     let resultState = state;
-    Object.keys(action.quantityMap).forEach(cart => {
+    Object.keys(action.quantityMap).forEach((cart) => {
         const quantity = action.quantityMap[cart];
 
         resultState = cart === targetCartItem.cart

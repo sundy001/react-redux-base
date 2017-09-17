@@ -48,6 +48,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
                 cartItem4: { id: 'cartItem4', item: 'item2', cart: 'cart2', quantity: 2, options: [] },
                 cartItem5: { id: 'cartItem5', item: 'item3', cart: 'cart4', quantity: 2, options: [] },
                 cartItem6: { id: 'cartItem6', item: 'item2', cart: 'cart5', quantity: 1, options: [{ type: 'topping', id: 'topping3' }] },
+
             },
             allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5', 'cartItem6'],
             idCounter: this.NEXT_ID,
@@ -74,7 +75,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
         it('should append then new item at the end', () => {
             const newCartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item9');
             const expectation = createAddExpectation(this.store, newCartItem);
-            expectation.idCounter++;
+            expectation.idCounter += 1;
 
             const result = cartItems(this.store, createAddCartItemActionByEntity(newCartItem));
 
@@ -124,7 +125,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
         it('should not sum item quantity when cart item is same options in the same cart but with different item', () => {
             const newCartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item4', 'cart2');
             const expectation = createAddExpectation(this.store, newCartItem);
-            expectation.idCounter++;
+            expectation.idCounter += 1;
 
             const result = cartItems(this.store, createAddCartItemActionByEntity(newCartItem));
 
@@ -134,7 +135,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
         it('should not sum item quantity when cart item is same item and options but in different cart', () => {
             const newCartItem = createRandomCartItem(generateCartItemId(this.NEXT_ID), 'item8', 'cart4');
             const expectation = createAddExpectation(this.store, newCartItem);
-            expectation.idCounter++;
+            expectation.idCounter += 1;
 
             const result = cartItems(this.store, createAddCartItemActionByEntity(newCartItem));
 
@@ -150,7 +151,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
                 [{ type: 'topping', id: 'topping1' }],
             );
             const expectation = createAddExpectation(this.store, newCartItem);
-            expectation.idCounter++;
+            expectation.idCounter += 1;
 
             const result = cartItems(this.store, createAddCartItemActionByEntity(newCartItem));
 
@@ -406,7 +407,7 @@ describe('cartItemsReducer', function (this: TestEnv) {
                 originalItem.options,
             );
             expectation.allIds.push(NEXT_ENTITY_ID);
-            expectation.idCounter++;
+            expectation.idCounter += 1;
             const action = updateCartItemOptions(CART_ITEM_ID, [], { [OTHER_CART]: QUANTITY });
 
             const result = cartItems(this.store, action);
