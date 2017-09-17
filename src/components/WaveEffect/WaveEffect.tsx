@@ -180,7 +180,6 @@ export default class WaveEffect extends React.Component<Props> {
         const ripples = Array.from(this.containerElem.getElementsByClassName('waves-rippling'));
 
         ripples.forEach(ripple => {
-            console.log('hideA');
             this.removeRipple(e, this.containerElem, ripple);
         });
 
