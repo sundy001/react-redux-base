@@ -5,8 +5,8 @@
 ///
 /// @requires sl-replace
 ///
-/// @param {List}    $list      - list to update
-/// @param {*}       $value     - value to remove
+/// @param {List} list   - list to update
+/// @param {*}    $value - value to remove
 ///
 /// @example
 /// sl-remove(a b c, a)
@@ -16,9 +16,9 @@
 ///
 
 @function sl-remove($list, $value) {
-  $_: sl-missing-dependencies('sl-replace');
+    $_: sl-missing-dependencies('sl-replace');
 
-  @return sl-replace($list, $value, null);
+    @return sl-replace($list, $value, null);
 }
 
 ///
@@ -27,5 +27,5 @@
 ///
 
 @function sl-without($list, $value) {
-  @return sl-remove($list, $value);
+    @return sl-remove($list, $value);
 }

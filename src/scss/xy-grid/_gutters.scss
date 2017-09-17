@@ -13,33 +13,33 @@
 /// @param {List} $gutter-position [right left] - The position to apply gutters to. Accepts `top`, `bottom`, `left`, `right` in any combination.
 /// @param {Boolean} $negative [false] - Whether to apply the gutter as a negative value. Commonly used for nested grids.
 @mixin xy-gutters(
-  $gutters: $grid-margin-gutters,
-  $gutter-type: margin,
-  $gutter-position: right left,
-  $negative: false
+    $gutters: $grid-margin-gutters,
+    $gutter-type: margin,
+    $gutter-position: right left,
+    $negative: false
 ) {
-  $operator: if($negative, '-', '');
+    $operator: if($negative, '-', '');
 
-  // If we have declared negative gutters, force type to `margin.
-  $gutter-type: if($negative, 'margin', $gutter-type);
+    // If we have declared negative gutters, force type to `margin.
+    $gutter-type: if($negative, 'margin', $gutter-type);
 
-  // Output our margin gutters.
-  @if (type-of($gutters) == 'map') {
-    @include -zf-breakpoint-value(auto, $gutters) {
-      $gutter: rem-calc($-zf-bp-value) / 2;
+    // Output our margin gutters.
+    @if (type-of($gutters) == 'map') {
+        @include -zf-breakpoint-value(auto, $gutters) {
+            $gutter: rem-calc($-zf-bp-value) / 2;
 
-      // Loop through each gutter position
-      @each $value in $gutter-position {
-        #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
-      }
+            // Loop through each gutter position
+            @each $value in $gutter-position {
+                #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+            }
+        }
     }
-  }
-  @elseif (type-of($gutters) == 'number') {
-    $gutter: rem-calc($gutters) / 2;
+    @elseif (type-of($gutters) == 'number') {
+        $gutter: rem-calc($gutters) / 2;
 
-    // Loop through each gutter position
-    @each $value in $gutter-position {
-      #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+        // Loop through each gutter position
+        @each $value in $gutter-position {
+            #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+        }
     }
-  }
 }

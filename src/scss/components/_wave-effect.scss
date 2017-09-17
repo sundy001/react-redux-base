@@ -19,9 +19,6 @@ $wave-ripple-default-color: white;
 @mixin waves-effect-container {
     position: relative;
     overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
@@ -36,6 +33,7 @@ $wave-ripple-default-color: white;
 }
 
 @mixin waves-ripple {
+    @include wave-ripple-color;
     position: absolute;
     border-radius: 50%;
     width: $wave-ripple-size;
@@ -43,7 +41,6 @@ $wave-ripple-default-color: white;
     margin-top:-$wave-ripple-size / 2;
     margin-left:-$wave-ripple-size / 2;
     opacity: 0;
-    @include wave-ripple-color;
     transition: all 0.5s ease-out;
     transition-property: transform, opacity;
     transform: scale(0) translate(0,0);

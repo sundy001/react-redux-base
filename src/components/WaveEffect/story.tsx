@@ -7,12 +7,12 @@ import { action } from '@storybook/addon-actions';
 
 storiesOf('WaveEffect', module)
     .add('button', () => (
-        <WaveEffect isLight>
+        <WaveEffect waveColor="light">
             <Button onClick={action('clicked')}>Hello Button</Button>
         </WaveEffect>
     ))
     .add('a tag', () => (
-        <WaveEffect isLight>
+        <WaveEffect waveColor="light">
             <a className="button" onClick={action('clicked')}>Hello Button</a>
         </WaveEffect>
     ))

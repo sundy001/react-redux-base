@@ -19,8 +19,8 @@
 @import 'print';
 
 @mixin foundation-typography {
-  @include foundation-typography-base;
-  @include foundation-typography-helpers;
-  @include foundation-text-alignment;
-  @include foundation-print-styles;
+    @include foundation-typography-base;
+    @include foundation-typography-helpers;
+    @include foundation-text-alignment;
+    @include foundation-print-styles;
 }

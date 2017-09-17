@@ -39,42 +39,42 @@ $subheader-margin-bottom: 0.5rem !default;
 $stat-font-size: 2.5rem !default;
 
 @mixin foundation-typography-helpers {
-  // Use to create a subheading under a main header
-  // Make sure you pair the two elements in a <header> element, like this:
-  // <header>
-  //   <h1>Heading</h1>
-  //   <h2>Subheading</h2>
-  // </header>
-  .subheader {
-    margin-top: $subheader-margin-top;
-    margin-bottom: $subheader-margin-bottom;
+    // Use to create a subheading under a main header
+    // Make sure you pair the two elements in a <header> element, like this:
+    // <header>
+    //     <h1>Heading</h1>
+    //     <h2>Subheading</h2>
+    // </header>
+    .subheader {
+        margin-top: $subheader-margin-top;
+        margin-bottom: $subheader-margin-bottom;
 
-    font-weight: $subheader-font-weight;
-    line-height: $subheader-lineheight;
-    color: $subheader-color;
-  }
-
-  // Use to style an introductory lead, deck, blurb, etc.
-  .lead {
-    font-size: $lead-font-size;
-    line-height: $lead-lineheight;
-  }
-
-  // Use to style a large number to display a statistic
-  .stat {
-    font-size: $stat-font-size;
-    line-height: 1;
-
-    p + & {
-      margin-top: -1rem;
+        font-weight: $subheader-font-weight;
+        line-height: $subheader-lineheight;
+        color: $subheader-color;
     }
-  }
 
-  ul, ol {
-    // Use to remove numbers from ordered list & bullets from unordered list
-    &.no-bullet {
-      margin-#{$global-left}: 0;
-      list-style: none;
+    // Use to style an introductory lead, deck, blurb, etc.
+    .lead {
+        font-size: $lead-font-size;
+        line-height: $lead-lineheight;
     }
-  }
+
+    // Use to style a large number to display a statistic
+    .stat {
+        font-size: $stat-font-size;
+        line-height: 1;
+
+        p + & {
+            margin-top: -1rem;
+        }
+    }
+
+    ul, ol {
+        // Use to remove numbers from ordered list & bullets from unordered list
+        &.no-bullet {
+            margin-#{$global-left}: 0;
+            list-style: none;
+        }
+    }
 }

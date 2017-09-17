@@ -16,18 +16,18 @@
 /// @param {List} $gutter-position [right left] - The position to apply gutters to. Accepts `top`, `bottom`, `left`, `right` in any combination.
 /// @param {Boolean} $vertical [false] - Set to true to output vertical (height) styles rather than widths.
 @mixin xy-grid-layout(
-  $n,
-  $selector: '.cell',
-  $gutter-output: true,
-  $gutters: $grid-margin-gutters,
-  $gutter-type: margin,
-  $gutter-position: right left,
-  $breakpoint: $-zf-zero-breakpoint,
-  $vertical: false
+    $n,
+    $selector: '.cell',
+    $gutter-output: true,
+    $gutters: $grid-margin-gutters,
+    $gutter-type: margin,
+    $gutter-position: right left,
+    $breakpoint: $-zf-zero-breakpoint,
+    $vertical: false
 ) {
-  $size: percentage(1/$n);
+    $size: percentage(1/$n);
 
-  & > #{$selector} {
-    @include xy-cell($size, $gutter-output, $gutters, $gutter-type, $gutter-position, $breakpoint, $vertical);
-  }
+    & > #{$selector} {
+        @include xy-cell($size, $gutter-output, $gutters, $gutter-type, $gutter-position, $breakpoint, $vertical);
+    }
 }

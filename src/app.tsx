@@ -4,7 +4,6 @@ import * as ReactDOM from 'react-dom';
 
 import './scss/all';
 import { Button } from 'components/Button';
-import Modal from 'components/Modal';
 import { Submenu } from 'components/Submenu';
 import { StickyContainer, Sticky } from 'components/Sticky';
 

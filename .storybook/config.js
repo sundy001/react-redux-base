@@ -6,6 +6,7 @@ function loadStories() {
   require('../src/components/WaveEffect/story.tsx');
   require('../src/components/Submenu/story.tsx');
   require('../src/components/ProductListItem/story.tsx');
+  require('../src/components/Modal/story.tsx');
 }
 
 configure(loadStories, module);

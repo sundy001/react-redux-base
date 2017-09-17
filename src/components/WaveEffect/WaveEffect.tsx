@@ -12,12 +12,11 @@ export default class WaveEffect extends React.Component<Props> {
     static propTypes = {
         children: PropTypes.element.isRequired,
         duration: PropTypes.number,
-        isLight: PropTypes.bool,
+        waveColor: PropTypes.string,
     }
 
     static defaultProps = {
         duration: 750,
-        isLight: false,
     }
 
     constructor(props: Props) {
@@ -194,8 +193,8 @@ export default class WaveEffect extends React.Component<Props> {
         const childElem = currentDom.childNodes[0] as HTMLElement;
         this.containerElem = childElem;
         childElem.classList.add('waves-effect');
-        if (this.props.isLight) {
-            childElem.classList.add('waves-light');
+        if (this.props.waveColor !== undefined) {
+            childElem.classList.add(`waves-${this.props.waveColor}`);
         }
     }
 
@@ -215,5 +214,5 @@ export default class WaveEffect extends React.Component<Props> {
 type Props = {
     children: React.ReactNode;
     duration?: number;
-    isLight?: boolean;
+    waveColor?: 'light' | 'brand';
 }

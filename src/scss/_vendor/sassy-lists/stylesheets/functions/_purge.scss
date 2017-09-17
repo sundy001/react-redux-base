@@ -15,24 +15,24 @@
 ///
 
 @function sl-purge($list) {
-  $_: sl-missing-dependencies('sl-is-true', 'sl-to-list');
-  
-  $result: ();
+    $_: sl-missing-dependencies('sl-is-true', 'sl-to-list');
 
-  @each $item in $list {
-    @if sl-is-true($item) {
-      $result: append($result, $item, list-separator($list));
+    $result: ();
+
+    @each $item in $list {
+        @if sl-is-true($item) {
+            $result: append($result, $item, list-separator($list));
+        }
     }
-  }
 
-  @return sl-to-list($result);
+    @return sl-to-list($result);
 }
 
 ///
 /// @requires sl-purge
 /// @alias sl-purge
 ///
- 
+
 @function sl-clean($list) {
-  @return sl-purge($list);
+    @return sl-purge($list);
 }

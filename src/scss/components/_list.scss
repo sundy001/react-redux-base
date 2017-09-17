@@ -58,6 +58,6 @@ $list-card-image-medium-width: 302px !default;
     }
 
     .list-card-image {
-       @include list-card-image;
+        @include list-card-image;
     }
 }

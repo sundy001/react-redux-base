@@ -30,7 +30,7 @@ storiesOf('ProductListItem', module)
     ))
     .add('with wave effect', () => (
         <ul className="list">
-            <WaveEffect isLight>
+            <WaveEffect waveColor="brand">
                 <ProductListItem
                     imageURL="https://unsplash.it/300/200?image=292"
                     name="Ramly (Malaysia Burger)"
@@ -44,7 +44,7 @@ storiesOf('ProductListItem', module)
     ))
     .add('demo', () => (
         <ul className="list">
-            <WaveEffect>
+            <WaveEffect waveColor="brand">
                 <ProductListItem
                     imageURL="https://unsplash.it/300/200?image=292"
                     name="Ramly (Malaysia Burger)"
@@ -54,7 +54,7 @@ storiesOf('ProductListItem', module)
                 >
                 </ProductListItem>
             </WaveEffect>
-            <WaveEffect isLight>
+            <WaveEffect waveColor="brand">
                 <ProductListItem
                     imageURL="https://unsplash.it/300/200?image=1080"
                     name="Big Mama (double-Beef double-Cheese)"
@@ -64,7 +64,7 @@ storiesOf('ProductListItem', module)
                 >
                 </ProductListItem>
             </WaveEffect>
-            <WaveEffect isLight>
+            <WaveEffect waveColor="brand">
                 <ProductListItem
                     name="Ramly (Malaysia Burger)"
                     description="Spiegelei, Ziegenkäse, Ketchup &amp; Mayo, hausgemachte Soße, frisch gegrilltes Rindfleisch"
@@ -72,7 +72,7 @@ storiesOf('ProductListItem', module)
                     onClick={action('clicked')}
                 ></ProductListItem>
             </WaveEffect>
-            <WaveEffect isLight>
+            <WaveEffect waveColor="brand">
                 <ProductListItem
                     name="Ramly (Malaysia Burger)"
                     description="Spiegelei, Ziegenkäse, Ketchup &amp; Mayo, hausgemachte Soße, frisch gegrilltes Rindfleisch"

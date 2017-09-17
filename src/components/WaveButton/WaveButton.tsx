@@ -11,7 +11,7 @@ const WaveButton: React.StatelessComponent<Props> = ({
     ...props
 }: Props) => {
     return (
-        <WaveEffect isLight>
+        <WaveEffect waveColor="light">
             <Button
                 {...props}
             >
