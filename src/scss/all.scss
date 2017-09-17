@@ -21,8 +21,8 @@
 @import 'typography/typography';
 @import 'components/menu';
 @import 'components/button';
-@import 'components/wave-effect';
 @import 'components/list';
+@import 'components/wave-effect';
 
 @import 'app/product';
 
@@ -33,5 +33,6 @@
 @include foundation-button;
 @include submenu;
 @include list-card;
+@include wave-effect;
 
 @include product;

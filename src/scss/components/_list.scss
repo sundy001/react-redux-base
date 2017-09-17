@@ -26,12 +26,11 @@ $list-card-image-medium-width: 302px !default;
     background-size: cover;
     background-position: center center;
     flex-shrink: 0;
+    flex-grow: 0;
 
     // TODO: the name tiny need to refine
     @include breakpoint(tiny) {
         width: $list-card-image-small-width;
-        flex-grow: 0;
-        flex-shrink: 0;
     }
 
     @include breakpoint(medium) {
