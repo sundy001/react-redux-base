@@ -19,7 +19,7 @@ const removeCartItem = (
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
     assertEntityExist('cartItems', state, id);
 
-    const byId: app.store.IdStore<app.entity.CartItem> = {...state.byId};
+    const byId: app.store.IdStore<app.entity.CartItem> = { ...state.byId };
     delete byId[id];
 
     return {
@@ -52,7 +52,7 @@ const updateCartItemQuantityAndOptions = (
         allIds: state.allIds,
         idCounter: state.idCounter,
     };
-}
+};
 
 const updateCartItem = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
@@ -107,13 +107,13 @@ const addCartItem = (
                 ...state.byId,
                 [id]: createCartItem(id, item, cart, quantity, options),
             },
-            allIds: [ ...state.allIds, id ],
+            allIds: [...state.allIds, id],
             idCounter: state.idCounter + 1,
         };
     } else {
         return updateCartItem(state, existingItemId, state.byId[existingItemId].quantity + quantity);
     }
-}
+};
 
 const addCartItemByAction = (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
@@ -160,7 +160,7 @@ export default (
     state: app.store.ReadonlyStore<app.entity.CartItem>,
     action: Action,
 ): app.store.ReadonlyStore<app.entity.CartItem> => {
-    switch(action.type) {
+    switch (action.type) {
         case ADD_CART_ITEM: return addCartItemByAction(state, action);
         case UPDATE_CART_ITEM_QUANTITY: return updateCartItemQuantityByAction(state, action);
         case UPDATE_CART_ITEM_OPTIONS: return updateCartItemOptionsByAction(state, action);

@@ -9,11 +9,11 @@ export const addCartItem = (
     quantity: number,
     options: ReadonlyArray<app.store.GenericId>,
 ): AddCartItemAction => ({
-    type: ADD_CART_ITEM,
     item,
     cart,
     quantity,
     options,
+    type: ADD_CART_ITEM,
 });
 
 export const updateCartItemQuantity = (
@@ -37,7 +37,7 @@ export const updateCartItemOptions = (
 });
 
 export const removeCartItem = (
-    id: string
+    id: string,
 ): RemoveCartItemAction => ({
     type: REMOVE_CART_ITEM,
     id,

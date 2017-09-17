@@ -2,6 +2,6 @@
 
 declare namespace jest {
     interface Matchers<R> {
-        toBeAwesome(): R
+        toBeAwesome(): R;
     }
 }

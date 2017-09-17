@@ -8,7 +8,8 @@
         "devserver": "webpack-dev-server",
         "test": "jest",
         "storybook": "start-storybook -s ./assets -p 9001 -c .storybook",
-        "lint": "tslint -c tslint.json 'src/**/*.ts'"
+        "lint": "tslint --config tslint.json 'src/**/*.ts'",
+        "lint-fix": "tslint --config tslint.json --fix 'src/**/*.ts'"
     },
     "author": "Jason LI",
     "license": "ISC",

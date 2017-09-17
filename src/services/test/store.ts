@@ -2,7 +2,7 @@ import { cloneDeep, get } from 'lodash';
 
 export function createAddExpectation<T extends app.store.Entity>(
     store: app.store.ReadonlyStore<T>,
-    newEntity: T
+    newEntity: T,
 ): app.store.Store<T> {
     const expectation = cloneDeep(store) as app.store.Store<T>;
     expectation.byId[newEntity.id] = newEntity;
@@ -27,9 +27,9 @@ export const shouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) 
             expect(result).not.toBe(self.store);
         });
 
-        paths.forEach(path => {
+        paths.forEach((path) => {
             let testPath = '';
-            path.split('.').forEach(partialPath => {
+            path.split('.').forEach((partialPath) => {
                 testPath += testPath === ''
                     ? partialPath
                     : '.' + partialPath
@@ -46,15 +46,17 @@ export const shouldBeImmutable = <U>(self: {store: app.store.ReadonlyStore<U>}) 
                     const result = reducer(self.store, action);
                     expect(get(result, testPath)).not.toBe(get(self.store, testPath));
                 });
-            })
+            });
         });
-    }
+    };
 };
 
-export const shouldThrowErrorWhenEntityNotFound = <U>(self: {store: app.store.ReadonlyStore<U>}) => {
+export const shouldThrowErrorWhenEntityNotFound = <U>(
+    self: {store: app.store.ReadonlyStore<U>},
+) => {
     return <T>(
         reducer: (state: app.store.ReadonlyStore<U>, action: T) => app.store.ReadonlyStore<U>,
-        action: T
+        action: T,
     ): void => {
         it('should throw error when id is not exist in byId', () => {
             const reducerWrapper = () => {
@@ -71,5 +73,5 @@ export const shouldThrowErrorWhenEntityNotFound = <U>(self: {store: app.store.Re
 
             expect(reducerWrapper).toThrowError(/is not found in/);
         });
-    }
+    };
 };

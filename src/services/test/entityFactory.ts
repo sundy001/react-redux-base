@@ -18,7 +18,7 @@ export const createRandomCartItem = (
         valueOrDefault(id, app.entityId('cartItem')),
         valueOrDefault(item, app.entityId('item')),
         valueOrDefault(owner, app.entityId('owner')),
-        valueOrDefault(quantity, random.number({min: 1, max: 20})),
+        valueOrDefault(quantity, random.number({ min: 1, max: 20 })),
         valueOrDefault(options, app.genericIds('topping')),
     );
 };

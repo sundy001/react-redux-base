@@ -1,6 +1,6 @@
-import { Container } from "inversify";
-import TYPES from "../TYPES";
+import { Container } from 'inversify';
+import TYPES from '../TYPES';
 
-var container = new Container();
+const container = new Container();
 
 export default container;

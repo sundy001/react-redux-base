@@ -3,7 +3,7 @@ declare namespace app {
         type LatLng = {
             lat: number;
             lng: number;
-        }
+        };
 
         interface TimeOption extends store.Entity {
             name: string;
@@ -77,7 +77,7 @@ declare namespace app {
     namespace store {
         enum DeliveryType {
             Delivery = 'Delivery',
-            Pickup = 'Pickup'
+            Pickup = 'Pickup',
         }
 
         interface RootStore {
@@ -93,7 +93,7 @@ declare namespace app {
 
             readonly ui: {
 
-            }
+            };
 
             readonly entity: {
                 readonly categories: Store<entity.Category>;
@@ -106,7 +106,7 @@ declare namespace app {
                 readonly cartItems: Store<entity.CartItem>;
                 readonly dateOptions: Store<entity.DateOption>;
                 readonly timeOptions: Store<entity.TimeOption>;
-            }
+            };
         }
 
         type IdStore<T extends Entity> = {

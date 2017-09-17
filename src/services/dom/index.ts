@@ -1,5 +1,5 @@
 export const offset = (elem: HTMLElement) => {
-    let box = elem.getBoundingClientRect();
+    const box = elem.getBoundingClientRect();
     const docElem = document.documentElement;
 
     return {
@@ -9,9 +9,9 @@ export const offset = (elem: HTMLElement) => {
 };
 
 export const isTouchEvent = (
-    event: MouseEvent | TouchEvent
+    event: MouseEvent | TouchEvent,
 ): event is TouchEvent => (<TouchEvent>event).touches !== undefined;
 
 export const isMouseEvent = (
-    event: MouseEvent | TouchEvent
-): event is MouseEvent =>(<MouseEvent>event).pageX !== undefined;
+    event: MouseEvent | TouchEvent,
+): event is MouseEvent => (<MouseEvent>event).pageX !== undefined;

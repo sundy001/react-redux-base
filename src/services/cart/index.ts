@@ -30,7 +30,7 @@ export const findIdentityItem = (
             const sortedItemOptions = cartItem.options.map(itemOptionMapper).sort();
 
             hasSameOptions = sortedItemOptions.every((option, i) =>
-                sortedItemOptions[i] === sortedOptions[i]
+                sortedItemOptions[i] === sortedOptions[i],
             );
         }
 

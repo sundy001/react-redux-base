@@ -11,5 +11,5 @@ export default (
         cart,
         quantity,
         options,
-    }
+    };
 };

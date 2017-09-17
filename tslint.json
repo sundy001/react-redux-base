@@ -3,9 +3,20 @@
     "extends": [
         "tslint-config-airbnb"
     ],
-    "jsRules": {},
+    "jsRules": {
+        "indent": [true, "spaces", 4]
+    },
     "rules": {
-        "indent": [true, "spaces", 1]
+        "indent": [
+            true,
+            "space",
+            4
+        ],
+        "ter-indent": [
+            true,
+            4,
+            { "SwitchCase": 1 }
+        ]
     },
     "rulesDirectory": []
 }

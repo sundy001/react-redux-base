@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import 'jest';
 import { cloneDeep } from 'lodash';
 import {
@@ -18,7 +18,7 @@ import {
 } from 'services/test';
 import { generateEntityId } from 'services/storeUtil';
 
-describe('cartItemsReducer', function(this: TestEnv) {
+describe('cartItemsReducer', function (this: TestEnv) {
     const createAddCartItemActionByEntity = (cartItem: app.entity.CartItem): AddCartItemAction => {
         return addCartItem(cartItem.item, cartItem.cart, cartItem.quantity, cartItem.options);
     };
@@ -42,12 +42,12 @@ describe('cartItemsReducer', function(this: TestEnv) {
                         { type: 'topping', id: 'topping1' },
                         { type: 'topping', id: 'topping2' },
                         { type: 'topping', id: 'topping3' },
-                    ]
+                    ],
                 },
                 cartItem3: { id: 'cartItem3', item: 'item3', cart: 'cart3', quantity: 7, options: [] },
                 cartItem4: { id: 'cartItem4', item: 'item2', cart: 'cart2', quantity: 2, options: [] },
                 cartItem5: { id: 'cartItem5', item: 'item3', cart: 'cart4', quantity: 2, options: [] },
-                cartItem6: { id: 'cartItem6', item: 'item2', cart: 'cart5', quantity: 1, options: [{ type: 'topping', id: 'topping3' }]},
+                cartItem6: { id: 'cartItem6', item: 'item2', cart: 'cart5', quantity: 1, options: [{ type: 'topping', id: 'topping3' }] },
             },
             allIds:['cartItem1', 'cartItem2', 'cartItem3', 'cartItem4', 'cartItem5', 'cartItem6'],
             idCounter: this.NEXT_ID,
@@ -66,7 +66,7 @@ describe('cartItemsReducer', function(this: TestEnv) {
                 byId: {
                     [newCartItem.id]: newCartItem,
                 },
-                allIds: [ newCartItem.id ],
+                allIds: [newCartItem.id],
                 idCounter: NEXT_ID + 1,
             });
         });
@@ -235,9 +235,9 @@ describe('cartItemsReducer', function(this: TestEnv) {
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
             const cartItem = expectation.byId[CART_ITEM_ID];
-            cartItem.options = [{type: 'topping', id: 'topping1'}];
+            cartItem.options = [{ type: 'topping', id: 'topping1' }];
             const action = updateCartItemOptions(CART_ITEM_ID, cartItem.options, {
-                [cartItem.cart]: cartItem.quantity
+                [cartItem.cart]: cartItem.quantity,
             });
 
             const result = cartItems(this.store, action);
@@ -253,7 +253,7 @@ describe('cartItemsReducer', function(this: TestEnv) {
             const cartItem = expectation.byId[CART_ITEM_ID];
             cartItem.quantity = QUANTITY;
             const action = updateCartItemOptions(CART_ITEM_ID, cartItem.options, {
-                [cartItem.cart]: QUANTITY
+                [cartItem.cart]: QUANTITY,
             });
 
             const result = cartItems(this.store, action);
@@ -403,7 +403,7 @@ describe('cartItemsReducer', function(this: TestEnv) {
                 originalItem.item,
                 OTHER_CART,
                 QUANTITY,
-                originalItem.options
+                originalItem.options,
             );
             expectation.allIds.push(NEXT_ENTITY_ID);
             expectation.idCounter++;
@@ -420,7 +420,7 @@ describe('cartItemsReducer', function(this: TestEnv) {
             const MERGED_CART_ITEM_ID = 'cartItem4';
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID]
+            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID];
             mergedItem.quantity += QUANTITY;
             const action = updateCartItemOptions(CART_ITEM_ID, [], { [mergedItem.cart]: QUANTITY });
 
@@ -435,18 +435,18 @@ describe('cartItemsReducer', function(this: TestEnv) {
             const MERGED_CART_ITEM_ID = 'cartItem2';
 
             const expectation = cloneDeep(this.store) as app.store.Store<CartItem>;
-            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID]
+            const mergedItem = expectation.byId[MERGED_CART_ITEM_ID];
             mergedItem.quantity += QUANTITY;
             const action = updateCartItemOptions(
                 CART_ITEM_ID,
                 [
-                    {type: 'topping', id: 'topping3'},
-                    {type: 'topping', id: 'topping1'},
-                    {type: 'topping', id: 'topping2'},
+                    { type: 'topping', id: 'topping3' },
+                    { type: 'topping', id: 'topping1' },
+                    { type: 'topping', id: 'topping2' },
                 ],
                 {
-                    [mergedItem.cart]: QUANTITY
-                }
+                    [mergedItem.cart]: QUANTITY,
+                },
             );
 
             const result = cartItems(this.store, action);
@@ -494,9 +494,9 @@ describe('cartItemsReducer', function(this: TestEnv) {
             expect(result).toBe(this.store);
         });
 
-        const action = updateCartItemOptions('cartItem1', [], { 'cart2': 1 });
+        const action = updateCartItemOptions('cartItem1', [], { cart2: 1 });
         shouldBeImmutable(this)(cartItems, action, ['byId.cartItem1.options']);
-        shouldThrowErrorWhenEntityNotFound(this)(cartItems, updateCartItemOptions('cartItem10', [], { 'cart2': 1 }));
+        shouldThrowErrorWhenEntityNotFound(this)(cartItems, updateCartItemOptions('cartItem10', [], { cart2: 1 }));
     });
 
     describe('#removeCartItem', () => {
@@ -526,5 +526,5 @@ interface CartItem extends app.store.Entity {
 
 type TestEnv = {
     NEXT_ID: number,
-    store: app.store.ReadonlyStore<app.entity.CartItem>
-}
+    store: app.store.ReadonlyStore<app.entity.CartItem>,
+};
