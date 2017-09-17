@@ -44,7 +44,7 @@ storiesOf('ProductListItem', module)
     ))
     .add('demo', () => (
         <ul className="list">
-            <WaveEffect >
+            <WaveEffect>
                 <ProductListItem
                     imageURL="https://unsplash.it/300/200?image=292"
                     name="Ramly (Malaysia Burger)"

@@ -1,0 +1,19 @@
+@mixin product-header {
+    display: flex;
+    width: 100%;
+    .name {
+        flex-grow: 1;
+    }
+
+    .price {
+        padding-left: 1rem;
+        color: $dark-gray;
+        text-align: right;
+    }
+}
+
+@mixin product {
+    .product-header {
+        @include product-header;
+    }
+}

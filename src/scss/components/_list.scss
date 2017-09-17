@@ -1,3 +1,10 @@
+$list-card-image-height: 160px !default;
+
+// TODO: change to scss map
+$list-card-image-tiny-width: 40% !default;
+$list-card-image-small-width: 160px !default;
+$list-card-image-medium-width: 302px !default;
+
 @mixin list-base {
     padding: 0;
     margin: 0;
@@ -12,6 +19,31 @@
     width: 100%;
 }
 
+@mixin list-card-image {
+    width: $list-card-image-tiny-width;
+    height: $list-card-image-height;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    flex-shrink: 0;
+
+    // TODO: the name tiny need to refine
+    @include breakpoint(tiny) {
+        width: $list-card-image-small-width;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    @include breakpoint(medium) {
+        width: $list-card-image-medium-width;
+    }
+}
+
+@mixin list-cart-section {
+    flex-grow: 1;
+    padding: 1rem;
+}
+
 @mixin list-card {
     .list {
         @include list-base;
@@ -23,29 +55,10 @@
     }
 
     .list-cart-section {
-        flex-grow: 1;
-        padding: 1rem;
-    }
-
-    .product-header {
-        display: flex;
-        width: 100%;
-        .name {
-            flex-grow: 1;
-        }
-
-        .price {
-            color: $dark-gray;
-            width: 7rem;
-            text-align: right;
-        }
+        @include list-cart-section;
     }
 
     .list-card-image {
-        width: 302px;
-        height: 160px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        flex-shrink: 0;
+       @include list-card-image;
     }
 }

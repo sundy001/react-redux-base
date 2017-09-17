@@ -17,15 +17,21 @@
 // Icon font
 @import 'icon-font/font-awesome';
 
+@import 'xy-grid/xy-grid';
 @import 'typography/typography';
 @import 'components/menu';
 @import 'components/button';
 @import 'components/wave-effect';
 @import 'components/list';
 
+@import 'app/product';
+
 @include foundation-global-styles;
+@include foundation-xy-grid-classes;
 @include foundation-typography;
 @include font-awesome;
 @include foundation-button;
 @include submenu;
 @include list-card;
+
+@include product;
