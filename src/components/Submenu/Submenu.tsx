@@ -2,7 +2,7 @@ import '../../scss/all';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-export const Submenu = ({
+const Submenu = ({
     items,
     onClick,
 }: Props) => {
@@ -34,7 +34,9 @@ export const Submenu = ({
             {submenuItems}
         </ul>
     );
-}
+};
+
+export default Submenu;
 
 export type SubmenuItem =  {
     id: number,

@@ -1,6 +1,5 @@
 import Sticky from './Sticky';
-import Container from './Container';
 
 export { Sticky as Sticky };
-export { Container as StickyContainer };
+export { default as StickyContainer } from './Container';;
 export default Sticky;

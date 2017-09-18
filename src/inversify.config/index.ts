@@ -1,3 +1,1 @@
-import container from './inversify.config';
-
-export default container;
+export { default as container } from './inversify.config';

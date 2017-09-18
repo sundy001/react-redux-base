@@ -1,3 +1,2 @@
-import WaveEffect from './WaveEffect';
+export { default as WaveEffect } from './WaveEffect';
 
-export { WaveEffect };
