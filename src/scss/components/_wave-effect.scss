@@ -40,10 +40,6 @@ $wave-ripple-default-color: white;
     height: $wave-ripple-size;
     margin-top:-$wave-ripple-size / 2;
     margin-left:-$wave-ripple-size / 2;
-    opacity: 0;
-    transition: all 0.5s ease-out;
-    transition-property: transform, opacity;
-    transform: scale(0) translate(0,0);
     pointer-events: none;
 }
 

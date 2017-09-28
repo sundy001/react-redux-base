@@ -31,7 +31,6 @@
         "jest": "^21.0.1",
         "lodash": "^4.17.4",
         "node-sass": "^4.5.3",
-        "node-waves": "0.7.5",
         "react": "^15.6.1",
         "react-dom": "^15.6.1",
         "react-redux": "^5.0.6",
@@ -48,7 +47,9 @@
         "typescript": "^2.5.2",
         "webpack": "^3.5.6",
         "webpack-dev-server": "^2.6.1",
-        "what-input": "^5.0.1"
+        "what-input": "^5.0.1",
+        "@types/react-motion": "0.0.23",
+        "react-motion": "https://github.com/sundy001/react-motion/tarball/c185dafb07d7a862430b551ee1747df40e5f001e"
     },
     "jest": {
         "globals": {
