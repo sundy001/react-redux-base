@@ -7,7 +7,7 @@ function loadStories() {
   require('../src/components/Submenu/story.tsx');
   require('../src/components/ProductListItem/story.tsx');
   require('../src/components/Modal/story.tsx');
-  require('../src/components/Ripple/story.tsx');
+  require('../src/components/RippleContainer/story.tsx');
 }
 
 configure(loadStories, module);

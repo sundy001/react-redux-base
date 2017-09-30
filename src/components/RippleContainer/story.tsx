@@ -1,9 +1,9 @@
 import 'what-input';
 import * as React from 'react';
-import Ripple, { RippleProps } from './Test';
+import RippleContainer, { RippleContainerProps } from './RippleContainer';
 import { storiesOf } from '@storybook/react';
 
-const Test2: React.StatelessComponent = (props: RippleProps & { children: ReadonlyArray<JSX.Element>}) => {
+const Test2: React.StatelessComponent = (props: RippleContainerProps) => {
     return (
         <div
             onMouseDown={props.onPress}
@@ -22,7 +22,7 @@ const Test2: React.StatelessComponent = (props: RippleProps & { children: Readon
     );
 }
 
-const Yo = Ripple(Test2);
+const Yo = RippleContainer(Test2);
 
 storiesOf('Ripple', module)
     .add('basic', () => (

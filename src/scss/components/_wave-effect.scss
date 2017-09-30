@@ -41,6 +41,7 @@ $wave-ripple-default-color: white;
     margin-top:-$wave-ripple-size / 2;
     margin-left:-$wave-ripple-size / 2;
     pointer-events: none;
+    transform: scale(0.5);
 }
 
 @mixin wave-effect {

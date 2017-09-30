@@ -1,6 +1,7 @@
 import '../../scss/all';
 import { Motion, linear } from 'react-motion';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 const { PropTypes } = React;
 
@@ -18,10 +19,10 @@ function RippleContainer<T1 extends object>(ComposedComponent: any): React.Compo
         }
 
         static rippleIdCounter = 0;
+        static readonly defaultStyle = { scale: 0.5, opacity: 0 };
         static readonly linearSetting = { velocity: 0.15 };
         static readonly slowLinearSetting = { velocity: 0.05 };
-        static readonly rippleRadius = 50;
-        static readonly defaultStyle = { scale: 0.5, opacity: 0 };
+        static readonly RIPPLE_RADIUS = 50;
 
         constructor(props: T1) {
             super(props);
@@ -47,8 +48,12 @@ function RippleContainer<T1 extends object>(ComposedComponent: any): React.Compo
 
         onPress = (event: React.MouseEvent<HTMLDivElement>): void => {
             const { offsetX, offsetY, timeStamp } = event.nativeEvent;
+
             RippledComponent.rippleIdCounter++;
             const key = RippledComponent.rippleIdCounter + '';
+
+            const { width, height } = ReactDOM.findDOMNode(this).getBoundingClientRect();
+            const scale = Math.sqrt(width * width + height * height) / RippledComponent.RIPPLE_RADIUS + 1;
 
             this.setState({
                 currentRipple: key,
@@ -57,6 +62,7 @@ function RippleContainer<T1 extends object>(ComposedComponent: any): React.Compo
                     {
                         key,
                         timeStamp,
+                        scale,
                         x: offsetX,
                         y: offsetY,
                         isPressing: true,
@@ -107,14 +113,14 @@ function RippleContainer<T1 extends object>(ComposedComponent: any): React.Compo
         }
 
         renderRipples() {
-            return this.state.ripples.map(({x, y, key, isPressing}) => (
+            return this.state.ripples.map(({x, y, key, scale, isPressing}) => (
                 <Motion
                     key={key}
                     defaultStyle={RippledComponent.defaultStyle}
                     style={
                         isPressing
                             ? {
-                                scale: linear(10, RippledComponent.linearSetting),
+                                scale: linear(scale, RippledComponent.linearSetting),
                                 opacity: linear(1, RippledComponent.linearSetting),
                             }
                             : {
@@ -143,7 +149,6 @@ function RippleContainer<T1 extends object>(ComposedComponent: any): React.Compo
         render() {
             const { onPress, onRelease } = this;
             const { children, ...otherProps } = this.props as any;
-
             const props = {
                 onPress,
                 onRelease,
@@ -169,11 +174,12 @@ type RippleUI = {
     readonly timeStamp: number;
     readonly x: number;
     readonly y: number;
+    readonly scale: number;
     readonly isPressing: boolean;
 };
 
-export type RippleProps = {
+export type RippleContainerProps = {
     onPress: (event: React.MouseEvent<HTMLDivElement>) => void;
     onRelease: (event: React.MouseEvent<HTMLDivElement>) => void;
-    ripples: ReadonlyArray<JSX.Element>,
+    children: ReadonlyArray<JSX.Element>;
 };

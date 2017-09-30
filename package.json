@@ -8,6 +8,7 @@
         "devserver": "webpack-dev-server",
         "test": "jest",
         "storybook": "start-storybook -s ./assets -p 9001 -c .storybook",
+        "storybook-build": "build-storybook -o ./storybook",
         "lint": "tslint --config tslint.json 'src/**/*.ts'",
         "lint-fix": "tslint --config tslint.json --fix 'src/**/*.ts'"
     },
